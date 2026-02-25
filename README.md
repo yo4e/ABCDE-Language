@@ -1,8 +1,19 @@
 # ABCDE Language
 
 <div align="center">
-  <video src="https://raw.githubusercontent.com/yo4e/ABCDE-Language/main/assets/promo_video.mp4" width="100%" controls autoplay loop muted></video>
+  <a href="https://raw.githubusercontent.com/yo4e/ABCDE-Language/main/assets/promo_video.mp4">
+    Watch the promo video (.mp4)
+  </a>
 </div>
+
+<!--
+To embed a playable video directly in this GitHub README:
+1. Open README.md in the GitHub web editor.
+2. Drag & drop assets/promo_video.mp4 into the editor.
+3. GitHub will generate a https://github.com/user-attachments/assets/... URL.
+4. Paste that URL on its own line below (GitHub renders it as an inline video player).
+-->
+<!-- Paste GitHub user-attachments video URL here -->
 
 Pronunciation (IPA): `[a.be.ke.de]`
 
