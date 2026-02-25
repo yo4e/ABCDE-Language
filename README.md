@@ -95,4 +95,4 @@ See the following documents for details:
 ---
 *Created by Yoshie Yamada*
 
-License: MIT (see `LICENSE`)
+License: MIT (see [LICENSE](LICENSE))
