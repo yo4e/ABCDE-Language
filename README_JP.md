@@ -1,7 +1,7 @@
 # ABCDE Language (アベケデ語)
 
 <div align="center">
-  <video src="./assets/promo_video.mov" width="100%" controls autoplay loop muted></video>
+  <video src="./assets/promo_video.mp4" width="100%" controls autoplay loop muted></video>
 </div>
 
 読み（日本語）: アベケデ / IPA `[a.be.ke.de]`
