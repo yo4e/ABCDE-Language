@@ -1,14 +1,10 @@
 # ABCDE Language
 
 <div align="center">
-  <a href="https://raw.githubusercontent.com/yo4e/ABCDE-Language/main/assets/promo_video.mp4">
+  <a href="https://github.com/user-attachments/assets/ecce6f34-5d4b-4302-b604-0ac491895d7a">
     Watch the promo video (.mp4)
   </a>
 </div>
-
-
-https://github.com/user-attachments/assets/ecce6f34-5d4b-4302-b604-0ac491895d7a
-
 
 <!--
 To embed a playable video directly in this GitHub README:
