@@ -13,10 +13,9 @@ GitHub README に再生プレイヤーとして埋め込む手順:
 3. https://github.com/user-attachments/assets/... のURLが自動生成される
 4. そのURLを単独行で下に貼る（GitHub上で動画プレイヤー表示される）
 -->
-<!-- ここに GitHub user-attachments の動画URLを貼る -->
+<!-- https://github.com/user-attachments/assets/67bf7452-2612-4583-96e6-3d60a6b9a6de -->
 
 
-Uploading promo_video.mp4…
 
 
 読み（日本語）: アベケデ / IPA `[a.be.ke.de]`
