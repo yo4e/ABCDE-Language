@@ -1,11 +1,5 @@
 # ABCDE Language
 
-<div align="center">
-  <a href="https://github.com/user-attachments/assets/ecce6f34-5d4b-4302-b604-0ac491895d7a">
-    Watch the promo video (.mp4)
-  </a>
-</div>
-
 https://github.com/user-attachments/assets/ecce6f34-5d4b-4302-b604-0ac491895d7a
 
 <!--

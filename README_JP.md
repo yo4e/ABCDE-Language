@@ -1,11 +1,5 @@
 # ABCDE Language (アベケデ語)
 
-<div align="center">
-  <a href="https://raw.githubusercontent.com/yo4e/ABCDE-Language/main/assets/promo_video.mp4">
-    プロモ動画を見る (.mp4)
-  </a>
-</div>
-
 <!--
 GitHub README に再生プレイヤーとして埋め込む手順:
 1. GitHub のWeb画面で README_JP.md を編集
@@ -13,9 +7,9 @@ GitHub README に再生プレイヤーとして埋め込む手順:
 3. https://github.com/user-attachments/assets/... のURLが自動生成される
 4. そのURLを単独行で下に貼る（GitHub上で動画プレイヤー表示される）
 -->
-<!-- https://github.com/user-attachments/assets/67bf7452-2612-4583-96e6-3d60a6b9a6de -->
+<!-- ここに GitHub user-attachments の動画URLを貼る -->
 
-
+https://github.com/user-attachments/assets/67bf7452-2612-4583-96e6-3d60a6b9a6de
 
 
 読み（日本語）: アベケデ / IPA `[a.be.ke.de]`
