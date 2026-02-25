@@ -1,15 +1,6 @@
 # ABCDE Language
 
-https://github.com/user-attachments/assets/ecce6f34-5d4b-4302-b604-0ac491895d7a
-
-<!--
-To embed a playable video directly in this GitHub README:
-1. Open README.md in the GitHub web editor.
-2. Drag & drop assets/promo_video.mp4 into the editor.
-3. GitHub will generate a https://github.com/user-attachments/assets/... URL.
-4. Paste that URL on its own line below (GitHub renders it as an inline video player).
--->
-<!-- Paste GitHub user-attachments video URL here -->
+https://github.com/user-attachments/assets/01b76855-3d2a-4847-9859-a9c75fc5db47
 
 Pronunciation (IPA): `[a.be.ke.de]`
 
