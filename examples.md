@@ -43,7 +43,7 @@ How to say everything using only 8 atoms.
 - CA DADA DADA -> That is a giant thing
 
 ## Survival & Greetings (Subject Omission allowed)
-- BABE CE -> こんにちは/さようなら（友達が良い）
+- BABE CE -> Hello / goodbye (friend good)
 - E? CECA CE -> [Context] Is the food good?
 - A! CEDA BA -> [Urgent] Help me!
 - CE BE -> [Greeting] Thank you (You are good)
