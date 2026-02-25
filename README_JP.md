@@ -15,6 +15,10 @@ GitHub README に再生プレイヤーとして埋め込む手順:
 -->
 <!-- ここに GitHub user-attachments の動画URLを貼る -->
 
+
+Uploading promo_video.mp4…
+
+
 読み（日本語）: アベケデ / IPA `[a.be.ke.de]`
 
 **The World's Simplest Language.**
