@@ -1,5 +1,10 @@
 # ABCDE Adaptations
 
+This is a **non-normative visual adaptation** of the current
+[specification](specification.md). The reference interpreter accepts canonical
+ABCDE text only; convert decorative glyphs back before parsing. Preserve the
+current draft's newline boundaries, spaces, and marker distinctions.
+
 ABCDE can be used as-is, but by **replacing the writing system**, it can fit more naturally into the worldbuilding of fantasy fiction, games, and TRPGs.
 
 This page shows adaptation ideas that change only the **visual appearance** of ABCDE while keeping its **meaning and grammar** intact.
@@ -70,8 +75,8 @@ This page shows adaptation ideas that change only the **visual appearance** of A
 
 Example:
 
-- `E? [Tokyo] ACE`
-- `▽? [Tokyo] △□▽`
+- `E? [Tokyo] CE`
+- `▽? [Tokyo] □▽`
 
 ## 8. Try Making a Derived Language
 

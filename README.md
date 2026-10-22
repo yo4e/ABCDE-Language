@@ -1,98 +1,112 @@
 # ABCDE Language
 
-https://github.com/user-attachments/assets/01b76855-3d2a-4847-9859-a9c75fc5db47
+**Eight semantic atoms. Five letters. No inflection.**
 
-Pronunciation (IPA): `[a.be.ke.de]`
+ABCDE / アベケデ `[a.be.ke.de]` is an experimental minimal language for basic
+connection, survival and mutual aid. This v1 review draft separates what atoms
+say from what people conventionally mean. It includes a small offline
+Japanese/English reference interpreter.
 
-**The World's Simplest Language.**
+[日本語](README_JP.md) · [Specification](specification.md) ·
+[Dictionary](dictionary.md) · [Examples](examples.md) · [Migration](migration.md)
 
-ABCDE is an ultra-minimal constructed language designed so that anyone in the world can learn it in just a few minutes.
+## The eight atoms
 
-Japanese version（日本語バージョン）: [README_JP.md](README_JP.md)
+<!-- BEGIN GENERATED: atoms -->
 
-## Concept
-- **Minimal vocabulary**: Communication is built from combinations of only eight "prime syllables" (atoms). They are all built from just five letters.
-- **Intuitive grammar**: No complex conjugation or inflection.
-- **Non-commercial, survival-first language**: Concepts like commerce are intentionally out of scope; the language prioritizes fundamental human communication and mutual aid.
+| Atom | IPA | Core field | 意味の核 |
+| --- | --- | --- | --- |
+| `A` | [a] | motion/change | 動き・変化 |
+| `E` | [e] | relation | 関係 |
+| `BA` | [ba] | self/source | 自己・起点 |
+| `BE` | [be] | other/target | 他者・対象 |
+| `CA` | [ka] | entity/matter | 存在・物 |
+| `CE` | [ke] | positive/desirable | 肯定的・望ましい |
+| `DA` | [da] | action/power | 行為・力 |
+| `DE` | [de] | negative/undesirable | 否定的・望ましくない |
 
-## The 8 Prime Syllables (Atoms)
-Everything in ABCDE is built from combinations of the following eight sounds and concepts.
+<!-- END GENERATED: atoms -->
 
-| Atom | Core Meaning | English Hint |
-| :--- | :--- | :--- |
-| **BA** | Self / Origin | self, I, from here |
-| **BE** | Other / Target | other, you, there |
-| **CA** | Matter / Fact | thing, matter, fact |
-| **DA** | Action / Power | move, do, force |
-| **CE** | Positive / Order | good, like, right |
-| **DE** | Negative / Chaos | bad, dislike, wrong |
-| **A** | Motion / Future | toward, future, to |
-| **E** | Relation / Past | past, connect, and |
+Join atoms into words: the final atom is the head; earlier atoms modify it.
+`ADACA` is an entity related to motion/action; **water** is its survival convention.
+The structural meaning and conventional reading are displayed separately.
+No new letters or conjugations are needed.
 
-## Grammar Rules
-- **Allowed characters**: In standard ABCDE writing, use only **uppercase `A B C D E`, Arabic numerals `0 1 2 3 4 5 6 7 8 9`, spaces, hyphen `-`, `!`, `?`, and `[ ]`**. Proper nouns and loanwords may be written as-is inside `[ ]`, but keep this to the minimum necessary.
-- **Word formation**: Join atoms directly (example: `CECA` = food).
-- **Plural / intensity**: Repeat a word (examples: `BACA BACA` = people, `CECE` = very good).
-- **Tense**: Put `A-` (future) or `E-` (past) at the beginning of the sentence. Pronounce these with a **longer vowel**.
-- **Negation**: For grammatical negation, use `DE-` and attach it **directly to the word being negated** (examples: `DE-DA` = not do, `DE-CE` = not good). Words that use `DE` lexically (`DEDE`, `DECA`, etc.) remain unchanged. `DE-` is also pronounced with a **long vowel**.
-- **Question / emphasis**: The default form places `E?` (question) or `A!` (emphasis) at the beginning of the sentence. Pronounce these **short and sharp**. In conversation, short forms like `CE!` / `DE!` are also allowed.
-- **Marker scope**: `A-` / `E-` / `E?` / `A!` apply to the **whole sentence**, so they go at the start. `DE-` applies to the **next word only**, so it goes at the start of that word.
-- **Sentence-initial marker order (recommended)**: If used together, placing `E?` / `A!` before `A-` / `E-` is easier to understand (example: `E? A- BA ADA ACA`).
-- **Word order (recommended)**: Word order is basically free. For learning and listening clarity, the recommended default pattern is `(sentence markers) -> (subject/topic) -> (predicate) -> (object) -> (place) -> (time)`. You may move elements forward for emphasis.
-- **Omission**: If the context is clear, you may omit not only the subject (`BA`, `BE`) but also object, place, time, etc. If meaning becomes ambiguous, return to the default pattern.
-- **Proper nouns**: Proper nouns and concepts not available in ABCDE should be enclosed in square brackets `[ ]` (example: `[Tokyo]`).
+## A small reliable grammar
 
-## Natural Units
-Instead of abstract units (meters, etc.), ABCDE uses natural cycles and references.
-- **3ACA**: 3 days (3 day-night cycles)
-- **1000BADA**: 1000 steps (walking distance)
-- **5DEDECECA**: the size of 5 eggs (size reference)
+- Use **subject → predicate → object/target**. Exchanging participants changes
+  who does what to whom. Predicate heads are `DA`, `CE`, `DE`.
+- Short sentences can omit subject/object. Missing roles remain unspecified;
+  if two parses fit, retain both. A lone non-predicate is a fragment.
+- Optional `E?` (question) or `A!` (emphasis) goes first, then optional `A-`
+  (future) or `E-` (past). No tense marker means unmarked time.
+- Attach `DE-` to one word to negate it. Emphasis/negation alone do not encode
+  commands; request readings are labeled conventions.
+- Separate sentences with newlines. Counts attach to terms (`3BACA`). External
+  labels such as `[Tokyo]` are opaque; repeated words do not mark plurality.
+- Final `E reference` expresses a relation. The relative-days convention makes
+  future + `E 3ACA` a candidate for “in 3 days”, anchored to the utterance.
 
-## Basic Concept Combinations
-- **Big / Small**: `DADA` / `DEDE` (examples: `DADA CA` = boulder, `DEDE CA` = grain / pebble)
-- **Food / Drink**: `CECA` (good-thing) / `ADA` (water / liquid)
-- **Colors (natural references)**:
-  - **Red**: `ACA` (sun- / fire-like thing)
-  - **Yellow**: `ECA` (harvest-like thing)
-  - **Blue**: `ADA` (water / sky-like thing)
-  - **White**: `A` (light / bright)
-  - **Black**: `DEA` (darkness / dark)
+`DEDE` is intensified negative evaluation, not small. `ADA` is motion/action;
+water is `ADACA`. `ACA` deliberately retains day/here/red as contextual candidates.
+Unknown compounds still have atom breakdowns. The interpreter never quietly adds
+“warm”, “want”, “I”, or a destination absent from the input.
 
-## Number Pronunciation
-Arabic numerals (`0-9`) are pronounced using the following sounds so they are not confused with the eight atoms.
+## Try it locally
 
-| Digit | Pronunciation | English Cue |
-| :--- | :--- | :--- |
-| **0** | ZERO | Zero |
-| **1** | WAN | One |
-| **2** | TSU | Two |
-| **3** | SURI | Three |
-| **4** | HOO | Four |
-| **5** | HAI | Five |
-| **6** | SIKU | Six |
-| **7** | SEFU | Seven |
-| **8** | ETO | Eight |
-| **9** | NAI | Nine |
+From this checkout, with Python 3.9+ (no installation, API key, or network):
 
-## How to Use (Examples)
-- **CE** -> yes / good / tasty / like
-- **DE** -> no / bad / tastes bad / dislike
-- **DE!** -> no! / stop! / I don't want that! / that's wrong! / danger!
-- **CE!** -> great! / yay! / I'm happy!
-- **E?** -> what? / what's wrong? / really?
-- **CE BE** -> thank you / please (lit. "`[I] think well of you`")
-- **BABE CE** -> hello / goodbye (`friend good`)
-- **E? CECA CE** -> Is the food good / tasty?
-- **A- BA ADA ACA** -> I will come here
-- **A! DE-DA CA** -> Absolutely don't do that!
+```sh
+python3 -m abcde 'A! CEDA BA'
+python3 -m abcde --from ja '水がほしい'
+python3 -m abcde --from en 'Help that person'
+python3 -m abcde --json 'A- EADA E 3ACA'
+python3 -m abcde --core-only 'ADACA'
+python3 -m abcde --phrases
+```
 
-See the following documents for details:
-- [Specification](specification.md): grammar and rules
-- [Dictionary](dictionary.md): lexicon
-- [Examples](examples.md): example sentences
-- [Adaptations](adaptations.md): adaptation ideas (fantasy script, etc.)
+Omit text to read stdin. Quote spaces and shell punctuation. JSON exposes atoms,
+roles, negation, conventional candidates and diagnostics. `valid` means valid
+structure, not complete meaning; `ambiguous` signals multiple parses/readings.
+Missing participants are still reported. Invalid/unsupported input exits 2.
+Reverse translation accepts only listed phrases, not arbitrary sentences.
+Whitespace is normalized and English case ignored; punctuation must match.
 
----
-*Created by Yoshie Yamada*
+## Survival examples
 
-License: MIT (see [LICENSE](LICENSE))
+These are **conventional candidates**, not guaranteed natural-language meanings.
+The full [examples](examples.md) include structural glosses and assumptions.
+
+<!-- BEGIN GENERATED: quick -->
+
+| ABCDE | 日本語候補 | English candidate |
+| --- | --- | --- |
+| `BACE ADACA` | 水がほしい（欲しい主体は省略） | Water is wanted (experiencer omitted) |
+| `A! DE-CECADA` | 食べないで | Do not eat |
+| `A! CEDA` | 助けて（助ける側・助けられる側は未指定） | Help (helper and beneficiary unspecified) |
+| `A! CEDA BA` | 私を助けて | Help me |
+| `A! CEDA BEBACA` | あの人を助けて | Help that person |
+| `A- EADA E 3ACA` | 3日後に戻る（主語は省略） | Return in 3 days (actor omitted) |
+
+<!-- END GENERATED: quick -->
+
+## Edit and verify
+
+```sh
+python3 tools/build_docs.py
+python3 tools/build_docs.py --check
+python3 -m unittest discover -s tests -v
+```
+
+Edit [language.json](abcde/data/language.json) for atoms, markers and lexical
+conventions; [examples.json](abcde/data/examples.json) for examples and exact
+reverse phrases. Generate dictionary/examples and marked README/spec sections
+from them. Grammar prose stays in the specification and is exercised by
+[conformance fixtures](tests/conformance.json). There is no second translator
+dictionary. [REVIEW.md](REVIEW.md) records decisions, checks and open questions.
+
+[Adaptations](adaptations.md) describes decorative scripts. The original
+[promo video](assets/promo_video.mp4) illustrates v0; it is historical material,
+not this draft's specification.
+
+Created by Yoshie Yamada. [MIT license](LICENSE).
