@@ -143,6 +143,23 @@ class MeaningTests(unittest.TestCase):
         self.assertIn("EMPHASIS_NOT_COMMAND", codes(sentence))
         self.assertEqual({"subject": None, "predicate": "DE-CECADA", "object": None}, surface_roles(sentence)[0])
 
+    def test_generic_help_keeps_both_participants_unspecified(self):
+        result = reverse("助けて")
+        self.assertEqual("supported", result["status"])
+        self.assertEqual(1, len(result["matches"]))
+        match = result["matches"][0]
+        self.assertEqual("A! CEDA", match["abcde"])
+        sentence = match["analysis"]["sentences"][0]
+        self.assertEqual([{"subject": None, "predicate": "CEDA", "object": None}], surface_roles(sentence))
+        self.assertEqual(["CEDA"], [term["surface"] for term in sentence["terms"]])
+        self.assertEqual("emphasis", sentence["mood"])
+        self.assertTrue({"UNSPECIFIED_SUBJECT", "UNSPECIFIED_OBJECT", "EMPHASIS_NOT_COMMAND"} <= codes(sentence))
+        candidate = sentence["translation_candidates"][0]
+        self.assertEqual("help_unspecified", candidate["id"])
+        self.assertEqual(match["assumptions"], candidate["assumptions"])
+        self.assertIn("依頼として読む慣用", candidate["assumptions"]["ja"])
+        self.assertIn("An emphatic assertion is also possible", candidate["assumptions"]["en"])
+
     def test_help_beneficiaries_are_distinct(self):
         me = reverse("私を助けて")["matches"][0]["analysis"]["sentences"][0]
         other = reverse("あの人を助けて")["matches"][0]["analysis"]["sentences"][0]
@@ -206,7 +223,7 @@ class MeaningTests(unittest.TestCase):
         self.assertEqual(["I like food"], [x["en"] for x in like])
 
     def test_core_only_suppresses_conventions_without_changing_parse(self):
-        for text in ("BA BACE ADACA", "A- EADA E 3ACA", "CE DE", "A! CEDA BA"):
+        for text in ("BA BACE ADACA", "A- EADA E 3ACA", "CE DE", "A! CEDA BA", "A! CEDA"):
             with self.subTest(text=text):
                 normal = first(text)
                 core = first(text, conventions=False)
@@ -218,7 +235,7 @@ class MeaningTests(unittest.TestCase):
         self.assertEqual("ambiguous", first("CE DE", conventions=False)["status"])
 
     def test_reverse_does_not_approximate_unknown_or_negative_input(self):
-        for language, text in (("ja", "水はいらない"), ("ja", "私を助けないで"),
+        for language, text in (("ja", "水はいらない"), ("ja", "私を助けないで"), ("ja", "助けないで"),
                                ("en", "I do not want water"), ("en", "Help me tomorrow"),
                                ("en", "Help me."), ("ja", "3日前に戻った")):
             with self.subTest(text=text):
@@ -253,7 +270,7 @@ class SharedDataAndCLITests(unittest.TestCase):
         for word, entry in LANGUAGE["conventions"].items():
             self.assertTrue(atomize(word))
             self.assertTrue(entry["readings"] and entry["note"]["en"] and entry["note"]["ja"])
-        self.assertEqual(21, len(EXAMPLES))
+        self.assertEqual(22, len(EXAMPLES))
 
     def test_generated_docs_are_current(self):
         for name, expected in render_all().items():
@@ -293,6 +310,14 @@ class SharedDataAndCLITests(unittest.TestCase):
         self.assertEqual(0, phrases.returncode)
         self.assertTrue(any("水がほしい" in p["ja"] for p in json.loads(phrases.stdout)))
         self.assertEqual(2, self.run_cli("--core-only", "--from", "ja", "水がほしい").returncode)
+
+    def test_cli_generic_help_displays_omission_and_appeal_assumptions(self):
+        proc = self.run_cli("--from", "ja", "助けて")
+        self.assertEqual(0, proc.returncode, proc.stderr)
+        for required in ("→ A! CEDA\n", "UNSPECIFIED_SUBJECT", "UNSPECIFIED_OBJECT",
+                         "EMPHASIS_NOT_COMMAND", "依頼として読む慣用", "An emphatic assertion is also possible"):
+            self.assertIn(required, proc.stdout)
+        self.assertNotIn("Help me", proc.stdout)
 
     def test_cli_human_output_shows_negation_and_assumptions(self):
         proc = self.run_cli("--from", "ja", "食べないで")

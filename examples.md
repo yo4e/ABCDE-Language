@@ -106,6 +106,30 @@ Structure 1: subject=unspecified; predicate=NOT(action/power〈positive/desirabl
 
 Reverse inputs / 逆翻訳の対応入力: `それを食べないで`; `Do not eat that`; `Don't eat that`
 
+## help_unspecified
+
+```text
+A! CEDA
+```
+
+**助けて（助ける側・助けられる側は未指定） / Help (helper and beneficiary unspecified)**
+
+State: `valid`; mood: `emphasis`; tense: `unmarked`.
+
+| Term | Atoms | 直訳 | Structural gloss |
+| --- | --- | --- | --- |
+| `CEDA` | CE + DA | 行為・力〈肯定的・望ましい〉 | action/power〈positive/desirable〉 |
+
+Structure 1: subject=unspecified; predicate=action/power〈positive/desirable〉; object/target=unspecified
+
+主語=未指定; 述語=行為・力〈肯定的・望ましい〉; 対象=未指定
+
+**Assumptions / 条件:** Uses help and an appeal reading of emphasis. Helper and beneficiary are unspecified; neither speaker nor addressee is assigned automatically. An emphatic assertion is also possible.
+
+CEDA＝助ける、A! の強調を依頼として読む慣用。助ける側・助けられる側は未指定で、話者や聞き手を自動的に割り当てない。強調された事実の記述とも読める。
+
+Reverse inputs / 逆翻訳の対応入力: `助けて`
+
 ## help_me
 
 ```text

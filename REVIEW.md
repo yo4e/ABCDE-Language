@@ -37,6 +37,7 @@ examples and marked portions of README/spec/migration are generated and checked.
 ```sh
 python3 -m abcde --from ja '水がほしい'
 python3 -m abcde --from ja '食べないで'
+python3 -m abcde --from ja '助けて'
 python3 -m abcde --from ja '私を助けて'
 python3 -m abcde --from ja 'あの人を助けて'
 python3 -m abcde --from ja '3 日後に戻る'
@@ -53,11 +54,11 @@ Python 3.9+; run from the checkout. No installation or network needed.
 
 Verified locally on Python 3.9.6:
 
-- `python3 -m unittest discover -s tests -v`: **32 tests passed**.
-- Independent conformance corpus: **40 accepted cases** (12 intentionally
+- `python3 -m unittest discover -s tests -v`: **34 tests passed**.
+- Independent conformance corpus: **41 accepted cases** (12 intentionally
   ambiguous) and **46 invalid cases**.
-- All **21 examples**, **28 lexical conventions**, and reverse aliases
-  (**20 Japanese / 17 English**) checked; generated documentation is current.
+- All **22 examples**, **28 lexical conventions**, and reverse aliases
+  (**21 Japanese / 17 English**) checked; generated documentation is current.
 - Exhaustive atom segmentation through four atoms: **4,680 sequences**.
   Boundary/control-character checks and 300 deterministic malformed-input
   probes completed without uncaught parser exceptions.
@@ -68,6 +69,7 @@ Verified locally on Python 3.9.6:
 | --- | --- | --- |
 | 水がほしい | `BACE ADACA` | Experiencer unspecified; water is an entity, not motion or blue. / 欲しい人を勝手に私にしない。 |
 | 食べないで | `A! DE-CECADA` | Negated eating; appeal is a convention, actor/food unspecified. / 否定を保持し、依頼の前提を表示。 |
+| 助けて | `A! CEDA` | Helper and beneficiary unspecified; appeal is a convention. / 助ける側も助けられる側も補わず、依頼読みの前提を表示。 |
 | 私を助けて | `A! CEDA BA` | Speaker is beneficiary; helper unspecified. / 助けられる側が私。 |
 | あの人を助けて | `A! CEDA BEBACA` | Third person is beneficiary, identified by context. / 聞き手や私に取り違えない。 |
 | 3 日後に戻る | `A- EADA E 3ACA` | Possible offset after utterance, not past; actor/destination unspecified. / E と E- を区別。 |
@@ -76,6 +78,13 @@ Manual reading also checked that generic action is not translated as warming,
 CE (like) is not upgraded to want, an old egg word gets a legacy warning,
 and future is not silently strengthened into intention. Generated tables and
 example outputs were inspected as text; this work has no browser UI.
+
+The finishing pass adds the exact Japanese phrase “助けて” using the existing
+one-predicate clause. Both participant roles stay null, and an emphatic assertion
+remains possible alongside the conventional appeal. Regression checks cover
+roles, the displayed assumption, core-only output, and rejection of the unsupported
+negative phrase “助けないで”; no new grammar or lexical word was needed.
+It also corrects migration.md's v0 quotation to “I will come here after 3 days”.
 
 Execution evidence is saved outside the repository in the sibling
 `review-evidence/` directory (test log, CLI samples, JSON analyses and counts).

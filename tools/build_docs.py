@@ -37,7 +37,7 @@ def marker_table():
 
 
 def quick_table():
-    ids = {"want_water", "do_not_eat", "help_me", "help_other", "return_three_days"}
+    ids = {"want_water", "do_not_eat", "help_unspecified", "help_me", "help_other", "return_three_days"}
     return table(["ABCDE", "日本語候補", "English candidate"], [
         ["`" + e["abcde"] + "`", e["ja"], e["en"]] for e in EXAMPLES if e["id"] in ids])
 

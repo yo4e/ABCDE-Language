@@ -56,7 +56,7 @@ external labels for now. `[egg]` is not automatically translated or a volume uni
 | `BA CE 5DEDECECA` = I want five eggs | CE is not want; egg/count/size were conflated. Re-express intent, e.g. `BA BACE 5[egg]`, with an agreed label. / 意図を確認して言い直す。 |
 | `CEA CA DA BABA` = the sun warms us | Four unmarked terms are invalid. No warmth is inferred; CEA does not derive sun. / 暖めるとは訳さない。 |
 | `BACA [Yo4e] CE` = you, Yo4e, are good | No implicit apposition/second person. `[Yo4e] CE` is a valid opaque-subject evaluation. / 同格やあなたを推定しない。 |
-| `A- BA ADA ACA E 3ACA` = return in three days | Movement is not return. Use EADA to offer return; destination remains unspecified. / 移動と戻るを区別。 |
+| `A- BA ADA ACA E 3ACA` = I will come here after 3 days | Movement, here and the time offset remain possible readings through conventions; ACA stays ambiguous. Return is a separate EADA convention. / 移動・ここ・3日後という候補は慣用として残す。戻るとは別。 |
 
 This is **not a backwards-compatible v0 parser**. Some old strings remain valid
 but change interpretation. `DEDE CA` now has a negative predicate and a thing

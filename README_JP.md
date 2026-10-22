@@ -80,6 +80,7 @@ JSON にはアトム・役割・否定・慣用候補・診断が入ります。
 | --- | --- | --- |
 | `BACE ADACA` | 水がほしい（欲しい主体は省略） | Water is wanted (experiencer omitted) |
 | `A! DE-CECADA` | 食べないで | Do not eat |
+| `A! CEDA` | 助けて（助ける側・助けられる側は未指定） | Help (helper and beneficiary unspecified) |
 | `A! CEDA BA` | 私を助けて | Help me |
 | `A! CEDA BEBACA` | あの人を助けて | Help that person |
 | `A- EADA E 3ACA` | 3日後に戻る（主語は省略） | Return in 3 days (actor omitted) |

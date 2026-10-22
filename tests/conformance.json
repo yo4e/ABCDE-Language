@@ -2,6 +2,7 @@
   "accepted": [
     {"input":"BA CEDA BE", "status":"valid", "roles":[{"subject":"BA","predicate":"CEDA","object":"BE"}]},
     {"input":"BE CEDA BA", "status":"valid", "roles":[{"subject":"BE","predicate":"CEDA","object":"BA"}]},
+    {"input":"A! CEDA", "status":"valid", "mood":"emphasis", "roles":[{"subject":null,"predicate":"CEDA","object":null}], "diagnostics":["UNSPECIFIED_SUBJECT","UNSPECIFIED_OBJECT","EMPHASIS_NOT_COMMAND"]},
     {"input":"A! CEDA BA", "status":"valid", "mood":"emphasis", "roles":[{"subject":null,"predicate":"CEDA","object":"BA"}]},
     {"input":"A! CEDA BEBACA", "status":"valid", "roles":[{"subject":null,"predicate":"CEDA","object":"BEBACA"}]},
     {"input":"A! BE CEDA BA", "status":"valid", "roles":[{"subject":"BE","predicate":"CEDA","object":"BA"}]},
