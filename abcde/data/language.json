@@ -1,0 +1,69 @@
+{
+  "version": "1.0.0-draft.1",
+  "baseline": "5f7d4b88fa339904e131519f8c305dcccf63497d",
+  "atoms": {
+    "A":  {"ipa": "a",  "en": "motion/change", "ja": "動き・変化"},
+    "E":  {"ipa": "e",  "en": "relation", "ja": "関係"},
+    "BA": {"ipa": "ba", "en": "self/source", "ja": "自己・起点"},
+    "BE": {"ipa": "be", "en": "other/target", "ja": "他者・対象"},
+    "CA": {"ipa": "ka", "en": "entity/matter", "ja": "存在・物"},
+    "CE": {"ipa": "ke", "en": "positive/desirable", "ja": "肯定的・望ましい"},
+    "DA": {"ipa": "da", "en": "action/power", "ja": "行為・力"},
+    "DE": {"ipa": "de", "en": "negative/undesirable", "ja": "否定的・望ましくない"}
+  },
+  "grammar": {
+    "predicate_heads": ["DA", "CE", "DE"],
+    "moods": {"E?": "question", "A!": "emphasis"},
+    "tenses": {"A-": "future", "E-": "past"},
+    "negation": "DE-",
+    "linker": "E",
+    "shorthand": {"CE!": "A! CE", "DE!": "A! DE"}
+  },
+  "conventions": {
+    "BA": {"readings": [{"en": "I/me", "ja": "私"}], "note": {"en": "The speaker, when used as a participant.", "ja": "参加者として使う場合は話者。"}},
+    "BE": {"readings": [{"en": "you", "ja": "あなた"}], "note": {"en": "The addressee; not any third person.", "ja": "聞き手。第三者全般ではない。"}},
+    "CA": {"readings": [{"en": "thing", "ja": "物"}], "note": {"en": "Which thing is unspecified.", "ja": "どの物かは未指定。"}},
+    "CE": {"readings": [{"en": "good", "ja": "良い"}, {"en": "like", "ja": "好む"}], "note": {"en": "Evaluation depends on the evaluator; not truth or safety.", "ja": "評価者に依存。真実や安全を保証しない。"}},
+    "DE": {"readings": [{"en": "bad", "ja": "悪い"}, {"en": "dislike", "ja": "好まない"}], "note": {"en": "Negative evaluation is not grammatical negation.", "ja": "否定的評価と文法的な否定は別。"}},
+    "DA": {"readings": [{"en": "do/make", "ja": "する・作る"}], "note": {"en": "Does not specify a particular action.", "ja": "具体的な行為は指定しない。"}},
+    "BABA": {"readings": [{"en": "we/us", "ja": "私たち"}], "note": {"en": "Group membership, including the addressee, is unspecified.", "ja": "聞き手を含むかなど集団の範囲は未指定。"}},
+    "BABE": {"readings": [{"en": "friend", "ja": "友人"}], "note": {"en": "A shared lexical convention.", "ja": "共有する語彙上の慣用。"}},
+    "BACA": {"readings": [{"en": "person", "ja": "人"}], "note": {"en": "No automatic first or second person reading.", "ja": "自動的に私やあなたを指さない。"}},
+    "BEBACA": {"readings": [{"en": "that other person", "ja": "あの人"}], "note": {"en": "Identify the third person by context or pointing.", "ja": "第三者を文脈や指差しで特定する。"}},
+    "CECA": {"readings": [{"en": "food", "ja": "食べ物"}], "note": {"en": "Food is a convention, not proof of edibility or safety.", "ja": "食べ物は慣用。可食性や安全性の保証ではない。"}},
+    "DECA": {"readings": [{"en": "harmful thing", "ja": "有害な物"}, {"en": "dirt", "ja": "汚れ"}], "note": {"en": "Not a reliable identification of poison.", "ja": "毒の確実な識別ではない。"}},
+    "DACA": {"readings": [{"en": "tool", "ja": "道具"}], "note": {"en": "An action-related entity.", "ja": "行為に関係する物。"}},
+    "ADA": {"readings": [{"en": "move/go", "ja": "移動する・行く"}], "note": {"en": "Does not distinguish coming, walking, or destination without context.", "ja": "来る・歩く・目的地は文脈なしでは区別しない。"}},
+    "ADACA": {"readings": [{"en": "water", "ja": "水"}], "note": {"en": "Flow-related entity; water is the survival convention.", "ja": "流れに関係する物。水という読みは生存会話の慣用。"}},
+    "BACE": {"readings": [{"en": "want", "ja": "欲しい"}], "note": {"en": "Self-related desirability; distinct from CE (good/like).", "ja": "自己に関係する望ましさ。CE（良い・好む）と区別。"}},
+    "CECADA": {"readings": [{"en": "eat", "ja": "食べる"}], "note": {"en": "Positive-entity-related action; eating is a convention.", "ja": "肯定的な物に関係する行為。食べるという読みは慣用。"}},
+    "CEDA": {"readings": [{"en": "help", "ja": "助ける"}], "note": {"en": "Positive action; the kind of assistance is unspecified.", "ja": "肯定的な行為。援助の方法は未指定。"}},
+    "DEDA": {"readings": [{"en": "hurt", "ja": "傷つける"}, {"en": "break", "ja": "壊す"}], "note": {"en": "Context chooses the negative action.", "ja": "具体的な否定的行為は文脈に依存。"}},
+    "EDA": {"readings": [{"en": "think", "ja": "考える"}], "note": {"en": "Relation-related action; no built-in logical correctness.", "ja": "関係にまつわる行為。論理的な正しさは含意しない。"}},
+    "EADA": {"readings": [{"en": "return", "ja": "戻る"}], "note": {"en": "Related motion/action; return destination needs context.", "ja": "関係のある移動・行為。戻る先は文脈で特定する。"}},
+    "ACA": {"readings": [{"en": "day", "ja": "日"}, {"en": "here", "ja": "ここ"}, {"en": "red", "ja": "赤"}], "note": {"en": "Deliberate polysemy. A counted temporal reference selects day only by the time-offset convention.", "ja": "意図的な多義。数付き時間参照で日を選ぶのも時間差の慣用による。"}},
+    "ABE": {"readings": [{"en": "there", "ja": "そこ・あそこ"}], "note": {"en": "A motion-related target; identify the place by context.", "ja": "動きに関係する対象。場所の特定は文脈に依存。"}},
+    "BADA": {"readings": [{"en": "step", "ja": "歩"}], "note": {"en": "A natural reference, with no fixed length.", "ja": "自然な参照単位。長さは一定ではない。"}},
+    "BADACA": {"readings": [{"en": "plant", "ja": "植物"}], "note": {"en": "A shared lexical convention, not an entailment of the atoms.", "ja": "共有する語彙上の慣用。アトムから必然的には導かれない。"}},
+    "CECE": {"readings": [{"en": "very good", "ja": "とても良い"}], "note": {"en": "Intensified positive evaluation, not perfection.", "ja": "肯定的評価の強調。完全性ではない。"}},
+    "DEDE": {"readings": [{"en": "very bad", "ja": "とても悪い"}], "note": {"en": "Intensified negative evaluation, never small.", "ja": "否定的評価の強調。小さいという意味にはしない。"}},
+    "DADA": {"readings": [{"en": "strong/powerful", "ja": "強い・力がある"}], "note": {"en": "Reinforced power, not a physical size measurement.", "ja": "力の強調。物理的な大きさの測定ではない。"}}
+  },
+  "legacy": {
+    "DEDE": {"en": "v0 also used this for small/weak. That reading is retired; use [small] as an opaque external term if needed.", "ja": "v0 の小さい・弱いという読みは廃止。必要なら外部語 [small] を使う。"},
+    "DEDECECA": {"en": "v0 egg/egg-size is retired. No automatic egg inference; use [egg]. Egg count does not specify volume.", "ja": "v0 の卵・卵大という読みは廃止。卵を推論せず [egg] を使う。卵の個数と体積は別。"},
+    "ADA": {"en": "v0 water/drink/blue readings are retired. Water is ADACA; movement alone is not drinking.", "ja": "v0 の水・飲む・青という読みは廃止。水は ADACA。移動は飲むことではない。"},
+    "DADA": {"en": "v0 big/giant is no longer a size reading; use [large] when size must be named.", "ja": "v0 の大きい・巨大というサイズ読みは廃止。サイズを名指すなら [large]。"},
+    "A": {"en": "v0 white/light is no longer a default convention; use [white]. Bare A is not future tense.", "ja": "v0 の白・光は標準の慣用から外す。白は [white]。裸の A は未来時制ではない。"},
+    "ECA": {"en": "v0 yellow is no longer a default convention; use [yellow].", "ja": "v0 の黄色は標準の慣用から外す。黄色は [yellow]。"},
+    "DEA": {"en": "v0 black/dark/night is no longer a default convention; use an external term.", "ja": "v0 の黒・暗い・夜は標準の慣用から外す。必要なら外部語を使う。"},
+    "ACE": {"en": "v0 paradise/good place is no longer a default convention; positive motion does not entail a place.", "ja": "v0 の楽園・良い場所は標準の慣用から外す。肯定的な動きは場所を含意しない。"},
+    "ADE": {"en": "v0 hell/bad place is no longer a default convention; negative motion does not entail a place.", "ja": "v0 の地獄・悪い場所は標準の慣用から外す。否定的な動きは場所を含意しない。"}
+  },
+  "time_convention": {
+    "id": "relative_days",
+    "unit": "ACA",
+    "en": "In the survival profile, future/past + E + counted ACA may mean that many days after/before the utterance. Bare E itself means only relation. Other readings remain possible.",
+    "ja": "生存会話の慣用では未来・過去 + E + 数付き ACA を発話時点からの日数差として読める。裸の E 自体は関係のみ。他の読みも残る。"
+  }
+}
