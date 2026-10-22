@@ -51,7 +51,20 @@ ABCDE / アベケデ `[a.be.ke.de]` は、人とのつながり・生存・助�
 未登録の合成語もアトムに分解できます。翻訳機が勝手に「暖める」「欲しい」「私」や
 移動先を補うことはしません。
 
-## ローカルで試す
+## ブラウザだけで試す
+
+リポジトリをダウンロードし、[docs/index.html](docs/index.html) をブラウザで開いてください。
+`docs` 内のファイルを同じフォルダに保てば、Python・Node.js・サーバーの起動は不要です。
+JavaScriptを有効にしたブラウザだけで、入力の解析と表示が完結します。
+
+日本語・英語→ABCDE、ABCDE→日本語・英語を選び、「読みを確認」を押します。例文ボタンと
+登録表現一覧からも試せます。直訳・慣用候補・前提・省略・複数の読みを分けて表示し、
+ABCDE入力では「アトムと構文だけを見る」も選べます。入力は外部送信・保存しません。
+
+静的ファイルはGitHub Pages向けにも配置できますが、公開設定は別の手順です。
+[静的版の検証・公開手順](STATIC_VIEWER.md)を参照してください。
+
+## Pythonの参照CLIで試す
 
 この checkout 内で、Python 3.9 以上を使います。インストール・APIキー・通信は不要です。
 
@@ -91,7 +104,9 @@ JSON にはアトム・役割・否定・慣用候補・診断が入ります。
 
 ```sh
 python3 tools/build_docs.py
+python3 tools/build_static.py
 python3 tools/build_docs.py --check
+python3 tools/build_static.py --check
 python3 -m unittest discover -s tests -v
 ```
 
@@ -99,6 +114,8 @@ python3 -m unittest discover -s tests -v
 対応表現は [examples.json](abcde/data/examples.json) を編集します。辞書・例文ページと
 README・仕様の指定部分はそこから生成し、翻訳機用に別の辞書を持ちません。文法の規定は
 仕様に置き、[適合例](tests/conformance.json)で検証します。
+静的版のデータと診断文も同じ正本から生成します。JavaScriptの文法処理はPythonとの
+全JSON一致で検証します（開発時のみNode.jsが必要です。未導入ならこの検証はskipされます）。
 [REVIEW.md](REVIEW.md) に判断理由・検証結果・残る論点をまとめています。
 
 [応用・派生](adaptations.md)は装飾的な文字体系の説明です。

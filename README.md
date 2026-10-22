@@ -52,7 +52,22 @@ water is `ADACA`. `ACA` deliberately retains day/here/red as contextual candidat
 Unknown compounds still have atom breakdowns. The interpreter never quietly adds
 “warm”, “want”, “I”, or a destination absent from the input.
 
-## Try it locally
+## Try it in a browser
+
+Download the repository and open [docs/index.html](docs/index.html) in a browser.
+Keep the files in `docs` together. No Python, Node.js, server, package installation,
+or API key is needed to use the viewer; JavaScript must be enabled.
+
+Choose Japanese/English → ABCDE or ABCDE → Japanese/English. Examples and the phrase
+list are generated from the shared data. The viewer separates literal structure,
+conventional candidates, assumptions, omitted roles, and alternate readings. ABCDE
+input also supports a core-only mode. Input is processed locally without sending or
+saving it. UI labels are Japanese; glosses and assumptions are bilingual.
+
+The static folder is also ready for GitHub Pages after separate publication setup.
+See [static-viewer verification and publication steps](STATIC_VIEWER.md).
+
+## Try the Python reference CLI
 
 From this checkout, with Python 3.9+ (no installation, API key, or network):
 
@@ -94,7 +109,9 @@ The full [examples](examples.md) include structural glosses and assumptions.
 
 ```sh
 python3 tools/build_docs.py
+python3 tools/build_static.py
 python3 tools/build_docs.py --check
+python3 tools/build_static.py --check
 python3 -m unittest discover -s tests -v
 ```
 
@@ -103,7 +120,10 @@ conventions; [examples.json](abcde/data/examples.json) for examples and exact
 reverse phrases. Generate dictionary/examples and marked README/spec sections
 from them. Grammar prose stays in the specification and is exercised by
 [conformance fixtures](tests/conformance.json). There is no second translator
-dictionary. [REVIEW.md](REVIEW.md) records decisions, checks and open questions.
+dictionary. Static data and diagnostic text are generated from the same reference.
+The JavaScript grammar implementation is checked against full Python result JSON;
+only this development check needs Node.js (it is explicitly skipped if Node is absent).
+[REVIEW.md](REVIEW.md) records decisions, checks and open questions.
 
 [Adaptations](adaptations.md) describes decorative scripts. The original
 [promo video](assets/promo_video.mp4) illustrates v0; it is historical material,

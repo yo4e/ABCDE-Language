@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'">
+  <title>ABCDE 翻訳ビューワー</title>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="icon" href="data:,">
+  <script src="./data.js" defer></script>
+  <script src="./engine.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#result">結果へ移動</a>
+<div class="page">
+  <header><div class="brand">ABCDE <span>LANGUAGE</span></div><span class="local">ブラウザだけで動作</span></header>
+  <div class="intro"><p class="eyebrow">8 ATOMS · 5 LETTERS</p><h1>言葉をほどく、翻訳機。</h1>
+    <p>直訳と慣用を分けて、読みを確認できます。</p></div>
+  <noscript><p class="notice">この静的ビューワーにはJavaScriptが必要です。入力は送信されません。</p></noscript>
+  <p id="loading" class="notice">画面を準備しています。変わらない場合は、data.js・engine.js・app.js が同じフォルダにあるか確認してください。</p>
+  <main>
+    <section class="input-panel" aria-label="翻訳の入力">
+      <form id="translator">
+        <label for="source">翻訳の方向</label>
+        <select id="source"><option value="ja">日本語 → ABCDE</option><option value="en">English → ABCDE</option><option value="abcde">ABCDE → 日本語・English</option></select>
+        <label for="text">入力する言葉</label>
+        <textarea id="text" rows="5" aria-describedby="input-help" placeholder="水がほしい / A! CEDA"></textarea>
+        <p id="input-help" class="hint">日本語・英語は登録表現のみ。ABCDEの文は改行で区切ります。上限8192文字です。</p>
+        <label class="core-option"><input id="core-only" type="checkbox" disabled> アトムと構文だけを見る（ABCDE入力）</label>
+        <div class="actions"><button class="primary" id="translate" type="submit" disabled>読みを確認</button>
+          <button class="clear" id="clear" type="button" disabled>クリア</button></div>
+        <div class="try"><h2>例から試す</h2><p class="hint">押すと方向と入力を切り替えて、結果を表示します。</p><div id="samples" class="samples"></div></div>
+        <details class="phrasebook"><summary>使える日本語・英語の一覧</summary><div id="phrases"></div></details>
+      </form>
+    </section>
+    <section class="result-panel" id="result" aria-label="翻訳の結果" tabindex="-1">
+      <div class="empty"><span class="empty-symbol" aria-hidden="true">A · B · C · D · E</span>
+        <h2>小さな言葉の、読みを確かめる。</h2><p>入力欄か例文から始められます。</p>
+        <p>直訳と慣用を分け、未指定の役割や複数の読みをそのまま表示します。</p></div>
+    </section>
+  </main>
+  <p id="announcement" class="sr-only" role="status" aria-live="polite"></p>
+  <footer><p>入力はブラウザ内だけで処理します。外部送信・入力履歴の保存はしません。</p>
+    <p>「構造は有効」は意味の確定ではありません。文脈が必要な読みと省略は、結果の前提を確認してください。</p>
+    <p id="version"></p></footer>
+</div>
+</body>
+</html>
