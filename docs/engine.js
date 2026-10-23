@@ -198,5 +198,5 @@
     return { language_version: LANGUAGE.version, input: text, source_language: language,
       status: matches.length ? 'supported' : 'unsupported', matches, note: DATA.reverse_note };
   }
-  globalThis.ABCDE = Object.freeze({ analyze, reverse, atomize, normalizePhrase, maxInput: DATA.max_input });
+  globalThis.ABCDE = Object.freeze({ analyze, reverse, atomize, tokenize, normalizePhrase, maxInput: DATA.max_input });
 })();
