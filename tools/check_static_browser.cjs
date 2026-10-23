@@ -17,7 +17,7 @@ async function main() {
   });
   assert.equal(python.status, 0, python.stderr);
   const corpus = JSON.parse(python.stdout);
-  const assets = new Map(await Promise.all(['index.html', 'style.css', 'data.js', 'engine.js', 'app.js'].map(async name =>
+  const assets = new Map(await Promise.all(['index.html', 'style.css', 'data.js', 'engine.js', 'composer.js', 'app.js'].map(async name =>
     [name, await fs.readFile(path.join(ROOT, 'docs', name))])));
   const server = http.createServer((request, response) => {
     const name = request.url === '/ABCDE-Language/' ? 'index.html' : request.url.replace(/^\/ABCDE-Language\//, '');
@@ -49,6 +49,7 @@ async function main() {
     const result = page.locator('#result');
     const text = () => result.innerText();
     const submit = async (source, value) => {
+      await page.locator('#mode-manual').click();
       await page.getByLabel('翻訳の方向').selectOption(source);
       await page.getByLabel('入力する言葉').fill(value);
       await page.getByRole('button', { name: '読みを確認', exact: true }).click();
@@ -56,7 +57,7 @@ async function main() {
     const shot = name => page.screenshot({ path: path.join(output, name + '.png'), fullPage: true });
     const noOverflow = async () => assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
     await shot('desktop-start');
-    const loadedRequests = requests.length;
+    let loadedRequests = requests.length;
     // Test the same full corpus in actual Chromium, independent of Node's V8.
     for (let offset = 0; offset < corpus.cases.length; offset += 250) {
       const batch = corpus.cases.slice(offset, offset + 250);
@@ -65,6 +66,83 @@ async function main() {
       actual.forEach((value, i) => assert.deepEqual(value, corpus.expected[offset + i], 'Parity case ' + JSON.stringify(batch[i]).slice(0,200)));
     }
     checks.push('Full JSON matches Python for ' + corpus.cases.length + ' cases in Chromium');
+
+    // Composition is separate from manual direction-specific drafts.
+    const draft = page.locator('#text');
+    const word = token => page.locator('#words [data-word="' + token + '"]').click();
+    const confirm = () => page.getByRole('button', { name: '読みを確認', exact: true }).click();
+    assert.equal(await page.locator('#words .word-card').count(), 28);
+    for (const token of ['BA', 'BACE', 'ADACA']) await word(token);
+    assert.equal(await draft.inputValue(), 'BA BACE ADACA');
+    assert.match(await page.locator('#word-preview').innerText(), /私/);
+    assert.match(await page.locator('#word-preview').innerText(), /水/);
+    await confirm();
+    assert.equal(await result.locator('.roles dd').nth(0).innerText(), 'BA');
+    assert.equal(await result.locator('.roles dd').nth(2).innerText(), 'ADACA');
+    await shot('desktop-composed-water');
+    await page.locator('#undo').click(); assert.equal(await draft.inputValue(), 'BA BACE');
+    assert.equal(await page.locator('#stale-note').isVisible(), true);
+    await page.locator('#redo').click(); assert.equal(await draft.inputValue(), 'BA BACE ADACA');
+    await page.locator('#clear').click(); assert.equal(await draft.inputValue(), '');
+    await page.locator('#undo').click(); assert.equal(await draft.inputValue(), 'BA BACE ADACA');
+    await page.locator('#new-sentence').click();
+    await word('CEDA'); await word('BA');
+    assert.equal(await draft.inputValue(), 'BA BACE ADACA\nCEDA BA');
+    await confirm();
+    assert.equal(await result.locator('.sentence').count(), 2);
+    assert.equal(await result.locator('.sentence').nth(1).locator('.unspecified').count(), 1);
+    await page.locator('#samples').getByRole('button', { name: '助けて', exact: true }).click();
+    await page.locator('#samples').getByRole('button', { name: '助けて', exact: true }).click();
+    assert.equal(await draft.inputValue(), 'BA BACE ADACA\nCEDA BA\nA! CEDA\nA! CEDA');
+    await page.locator('.phrasebook > summary').click();
+    await page.locator('#phrases').getByRole('button', { name: 'Help me', exact: true }).click();
+    assert.match(await draft.inputValue(), /A! CEDA\nA! CEDA\nA! CEDA BA$/);
+    await page.locator('.phrasebook > summary').click();
+    const assembled = await draft.inputValue();
+    checks.push('28 shared word cards; append, explicit line break, repeated phrases, undo/redo and reversible clear');
+
+    await submit('ja', '水はいらない');
+    await submit('en', 'I want water');
+    await submit('abcde', 'BACEDA');
+    await page.locator('#source').selectOption('ja'); assert.equal(await draft.inputValue(), '水はいらない');
+    await page.locator('#source').selectOption('en'); assert.equal(await draft.inputValue(), 'I want water');
+    await page.locator('#mode-build').click(); assert.equal(await draft.inputValue(), assembled);
+    await draft.selectText(); // A card always appends; it never replaces the selected text.
+    await word('BA'); assert.equal(await draft.inputValue(), assembled + ' BA');
+    await page.locator('#undo').click(); assert.equal(await draft.inputValue(), assembled);
+    await page.locator('#clear').click();
+    await draft.fill('CE DE'); await confirm();
+    assert.equal(await result.locator('.roles').count(), 2);
+    await page.locator('#undo').click(); assert.equal(await draft.inputValue(), '');
+    await page.locator('#redo').click(); assert.equal(await draft.inputValue(), 'CE DE');
+    await draft.press('Meta+z'); assert.equal(await draft.inputValue(), '');
+    await draft.press('Meta+Shift+z'); assert.equal(await draft.inputValue(), 'CE DE');
+    await page.locator('#word-search').fill('water');
+    assert.equal(await page.locator('#words .word-card').count(), 1);
+    await page.locator('[data-category="predicate"]').click();
+    assert.equal(await page.locator('#no-words').isVisible(), true);
+    await page.locator('#word-search').fill('');
+    await page.locator('[data-category="all"]').click();
+    assert.equal(await page.locator('#words .word-card').count(), 28);
+    const contextual = page.locator('#words [data-word="ACA"]');
+    assert.match(await contextual.innerText(), /日 \/ ここ \/ 赤/);
+    await page.locator('#new-sentence').click(); await word('ACA'); await confirm();
+    assert.equal(await draft.inputValue(), 'CE DE\nACA');
+    assert.match(await page.locator('#word-preview').innerText(), /日 \/ ここ \/ 赤/);
+    assert.match(await text(), /day \/ here \/ red/);
+    await page.locator('#clear').click();
+    await draft.fill('A'.repeat(8192)); await word('BA');
+    assert.equal((await draft.inputValue()).length, 8192);
+    assert.match(await page.locator('#edit-message').innerText(), /今の入力はそのまま/);
+    await page.locator('#undo').click(); assert.equal(await draft.inputValue(), '');
+    await page.locator('#mode-manual').click();
+    await page.locator('#source').selectOption('ja'); assert.equal(await draft.inputValue(), '水はいらない');
+    checks.push('All manual drafts survive building; caret selection, typing undo, keyboard undo, search and refusal at input limit');
+
+    await page.goto(fileURL); // Explicit reload clears in-memory drafts, as documented.
+    assert.equal(await draft.inputValue(), '');
+    await page.locator('#mode-manual').click(); assert.equal(await draft.inputValue(), '');
+    loadedRequests = requests.length;
     await submit('ja', '水がほしい');
     assert.match(await text(), /BACE ADACA/);
     assert.equal(await result.locator('.unspecified').count(), 1);
@@ -96,9 +174,11 @@ async function main() {
     await page.getByRole('button', { name: '読みを確認', exact: true }).click();
     assert.equal(await result.locator('.candidate, .lexical').count(), 0);
     assert.match(await text(), /アトムと構文のみ/);
+    await page.locator('#mode-build').click();
     await page.locator('#samples').getByRole('button', { name: '水がほしい', exact: true }).click();
-    assert.equal(await page.getByLabel('翻訳の方向').inputValue(), 'ja');
-    assert.equal(await page.getByLabel('アトムと構文だけを見る（ABCDE入力）').isChecked(), false);
+    assert.equal(await page.getByLabel('アトムと構文だけを見る（ABCDE入力）').isChecked(), true);
+    await page.getByLabel('アトムと構文だけを見る（ABCDE入力）').uncheck();
+    await confirm();
     assert.match(await text(), /BACE ADACA/);
     await submit('ja', '助けないで');
     assert.match(await text(), /この表現は未対応/);
@@ -130,19 +210,37 @@ async function main() {
     await page.getByRole('button', { name: 'クリア', exact: true }).click();
     assert.equal(await page.getByLabel('入力する言葉').inputValue(), '');
     assert.equal(await result.locator('.answer').count(), 0);
+    await page.locator('#mode-build').click();
     await page.locator('.phrasebook > summary').click();
     await page.locator('#phrases').getByRole('button', { name: 'Help me', exact: true }).click();
-    assert.equal(await page.getByLabel('翻訳の方向').inputValue(), 'en');
+    assert.equal(await draft.inputValue(), 'BACE ADACA\nA! CEDA BA');
+    await confirm();
     assert.match(await text(), /A! CEDA BA/);
     assert.equal(page.url(), fileURL);
     assert.equal(requests.length, loadedRequests);
     checks.push('Repeated operations, editing, clear, examples, phrasebook; no navigation or requests on input');
 
     await page.setViewportSize({ width: 390, height: 844 });
+    await page.locator('.phrasebook > summary').click();
+    await page.locator('#clear').click();
+    for (const token of ['BA', 'CEDA', 'BEBACA']) await word(token);
+    assert.equal(await draft.inputValue(), 'BA CEDA BEBACA');
+    await page.locator('#undo').click(); await page.locator('#redo').click(); await confirm();
+    await noOverflow(); await shot('mobile-composer');
     await submit('ja', '助けて'); await noOverflow(); await shot('mobile-help');
     await submit('abcde', 'CE DE'); await noOverflow(); await shot('mobile-ambiguous');
     await page.setViewportSize({ width: 320, height: 720 });
     await submit('abcde', '[' + 'longlabel'.repeat(40) + ']'); await noOverflow();
+    await page.locator('#mode-build').click();
+    await page.locator('#samples').getByRole('button', { name: '助けて', exact: true }).click();
+    assert.equal(await draft.inputValue(), 'BA CEDA BEBACA\nA! CEDA');
+    await confirm();
+    assert.equal(await result.locator('.sentence').nth(1).locator('.unspecified').count(), 2);
+    await noOverflow(); await shot('narrow-composer');
+    const colors = await page.evaluate(() => ({ background: getComputedStyle(document.body).backgroundColor,
+      text: getComputedStyle(document.body).color, button: getComputedStyle(document.getElementById('translate')).backgroundColor }));
+    assert.deepEqual(colors, { background: 'rgb(255, 255, 255)', text: 'rgb(23, 23, 23)', button: 'rgb(255, 214, 41)' });
+    checks.push('White/black/yellow palette and composition/undo/repeated additions at 390px and 320px');
     checks.push('1280px/390px/320px responsive layout, long labels without horizontal overflow');
 
     await page.goto(httpURL);

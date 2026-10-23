@@ -37,6 +37,13 @@ class StaticViewerTests(unittest.TestCase):
         self.assertTrue((ROOT / "docs/.nojekyll").exists())
 
     @unittest.skipUnless(shutil.which("node"), "Node is needed only for JS parity tests, not for the viewer")
+    def test_composer_preserves_drafts_and_history(self):
+        proc = subprocess.run(["node", "tests/test_composer.cjs"], cwd=ROOT,
+                              text=True, capture_output=True, timeout=10)
+        self.assertEqual(0, proc.returncode, proc.stderr)
+        self.assertEqual(14, json.loads(proc.stdout)["passed"])
+
+    @unittest.skipUnless(shutil.which("node"), "Node is needed only for JS parity tests, not for the viewer")
     def test_javascript_matches_python_full_json(self):
         corpus = cases()
         proc = subprocess.run(["node", "tools/run_static.cjs"], cwd=ROOT, input=json.dumps(corpus),

@@ -10,39 +10,60 @@
   <link rel="icon" href="data:,">
   <script src="./data.js" defer></script>
   <script src="./engine.js" defer></script>
+  <script src="./composer.js" defer></script>
   <script src="./app.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#result">結果へ移動</a>
 <div class="page">
   <header><div class="brand">ABCDE <span>LANGUAGE</span></div><span class="local">ブラウザだけで動作</span></header>
-  <div class="intro"><p class="eyebrow">8 ATOMS · 5 LETTERS</p><h1>言葉をほどく、翻訳機。</h1>
-    <p>直訳と慣用を分けて、読みを確認できます。</p></div>
+  <div class="intro"><p class="eyebrow">8 ATOMS · 5 LETTERS</p><h1>選んで、つないで、伝える。</h1>
+    <p>ことばを足して文章に。直訳と慣用を分けて、読みを確かめられます。</p></div>
   <noscript><p class="notice">この静的ビューワーにはJavaScriptが必要です。入力は送信されません。</p></noscript>
-  <p id="loading" class="notice">画面を準備しています。変わらない場合は、data.js・engine.js・app.js が同じフォルダにあるか確認してください。</p>
+  <p id="loading" class="notice">画面を準備しています。変わらない場合は、data.js・engine.js・composer.js・app.js が同じフォルダにあるか確認してください。</p>
   <main>
     <section class="input-panel" aria-label="翻訳の入力">
       <form id="translator">
-        <label for="source">翻訳の方向</label>
+        <div class="mode-switch" role="group" aria-label="入力方法">
+          <button id="mode-build" type="button" aria-pressed="true" disabled>ことばを選ぶ</button>
+          <button id="mode-manual" type="button" aria-pressed="false" disabled>手入力</button>
+        </div>
+        <p id="draft-note" class="hint">手入力の下書きも、翻訳方向ごとに保持します。</p>
+        <div id="direction-control" hidden><label for="source">翻訳の方向</label>
         <select id="source"><option value="ja">日本語 → ABCDE</option><option value="en">English → ABCDE</option><option value="abcde">ABCDE → 日本語・English</option></select>
-        <label for="text">入力する言葉</label>
-        <textarea id="text" rows="5" aria-describedby="input-help" placeholder="水がほしい / A! CEDA"></textarea>
-        <p id="input-help" class="hint">日本語・英語は登録表現のみ。ABCDEの文は改行で区切ります。上限8192文字です。</p>
+        </div>
+        <label for="text" id="text-label">組み立てた文章（ABCDE）</label>
+        <textarea id="text" rows="3" aria-describedby="input-help" placeholder="下の語カードを押すと、ここに追加されます"></textarea>
+        <p id="input-help" class="hint">語は末尾に追加、例文は新しい行に追記します。上限8192文字です。</p>
+        <div id="word-preview" aria-label="選んだ語のラベル"></div>
+        <div class="edit-actions" role="group" aria-label="編集操作">
+          <button id="undo" type="button" disabled>取り消し</button><button id="redo" type="button" disabled>やり直し</button>
+          <button id="new-sentence" type="button" disabled>次の文へ ↵</button><button class="clear" id="clear" type="button" disabled>クリア</button>
+        </div>
         <label class="core-option"><input id="core-only" type="checkbox" disabled> アトムと構文だけを見る（ABCDE入力）</label>
-        <div class="actions"><button class="primary" id="translate" type="submit" disabled>読みを確認</button>
-          <button class="clear" id="clear" type="button" disabled>クリア</button></div>
-        <div class="try"><h2>例から試す</h2><p class="hint">押すと方向と入力を切り替えて、結果を表示します。</p><div id="samples" class="samples"></div></div>
-        <details class="phrasebook"><summary>使える日本語・英語の一覧</summary><div id="phrases"></div></details>
+        <div class="actions"><button class="primary" id="translate" type="submit" disabled>読みを確認</button></div>
+        <p id="edit-message" class="edit-message" role="status"></p>
+        <div id="builder-choices">
+          <section class="wordbook" aria-label="語を追加">
+            <div class="section-heading"><h2>ことばを追加</h2><span id="word-count" class="badge"></span></div>
+            <p class="hint">主語 → 述語 → 対象の順に選べます。省略も可能です。カードの日本語・英語は慣用のラベルで、文の訳ではありません。</p>
+            <label for="word-search" class="sr-only">ことばを探す</label><input id="word-search" type="search" placeholder="日本語・English・ABCDEで探す">
+            <div class="word-filters" role="group" aria-label="語の種類"><button type="button" data-category="all" aria-pressed="true">すべて</button><button type="button" data-category="entity" aria-pressed="false">人・物</button><button type="button" data-category="predicate" aria-pressed="false">行為・評価</button></div>
+            <div id="words" class="word-grid"></div><p id="no-words" class="hint" hidden>一致する語がありません。</p>
+          </section>
+          <div class="try"><h2>例文を一文追加</h2><p class="hint">前の入力を残し、改行して追加します。</p><div id="samples" class="samples"></div></div>
+          <details class="phrasebook"><summary>使える日本語・英語の一覧</summary><p class="hint">どの例文もABCDEの新しい一文として追加されます。</p><div id="phrases"></div></details>
+        </div>
       </form>
     </section>
     <section class="result-panel" id="result" aria-label="翻訳の結果" tabindex="-1">
       <div class="empty"><span class="empty-symbol" aria-hidden="true">A · B · C · D · E</span>
-        <h2>小さな言葉の、読みを確かめる。</h2><p>入力欄か例文から始められます。</p>
+        <h2>ことばをつないでみよう。</h2><p>「私」→「欲しい」→「水」を選んで「読みを確認」。</p>
         <p>直訳と慣用を分け、未指定の役割や複数の読みをそのまま表示します。</p></div>
     </section>
   </main>
   <p id="announcement" class="sr-only" role="status" aria-live="polite"></p>
-  <footer><p>入力はブラウザ内だけで処理します。外部送信・入力履歴の保存はしません。</p>
+  <footer><p>入力はこの画面を開いている間だけ保持します。外部送信・端末への保存はしません。再読み込み・終了で下書きは消えます。</p>
     <p>「構造は有効」は意味の確定ではありません。文脈が必要な読みと省略は、結果の前提を確認してください。</p>
     <p id="version"></p></footer>
 </div>

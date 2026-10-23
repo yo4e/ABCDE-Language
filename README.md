@@ -58,14 +58,22 @@ Download the repository and open [docs/index.html](docs/index.html) in a browser
 Keep the files in `docs` together. No Python, Node.js, server, package installation,
 or API key is needed to use the viewer; JavaScript must be enabled.
 
-Choose Japanese/English → ABCDE or ABCDE → Japanese/English. Examples and the phrase
-list are generated from the shared data. The viewer separates literal structure,
-conventional candidates, assumptions, omitted roles, and alternate readings. ABCDE
-input also supports a core-only mode. Input is processed locally without sending or
-saving it. UI labels are Japanese; glosses and assumptions are bilingual.
+In “ことばを選ぶ” (choose words), click any of the 28 cards with Japanese and English
+labels to append an ABCDE word. “私” → “欲しい” → “水” produces `BA BACE ADACA`.
+Example and phrase buttons append a new sentence on a new line, keeping prior input.
+Use “次の文へ” for a line break, then “読みを確認” to check the reading. Word order and
+omitted roles are never silently repaired.
 
-The static folder is also ready for GitHub Pages after separate publication setup.
-See [static-viewer verification and publication steps](STATIC_VIEWER.md).
+“手入力” (manual input) supports Japanese/English → ABCDE and ABCDE → Japanese/English.
+The composer and each manual direction keep separate drafts. Undo/redo covers the
+last 100 operations, including clear. Drafts live only in this page's memory and
+disappear on reload/close; no input is sent or saved to device storage.
+
+Literal structure, conventional candidates, assumptions, omitted roles, and alternate
+readings remain separate; ABCDE input also supports a core-only mode. Native-language
+reverse translation accepts registered phrases only. The UI uses white, black and
+yellow; controls are Japanese, while glosses and assumptions are bilingual.
+See [detailed controls, verification and publication steps](STATIC_VIEWER.md).
 
 ## Try the Python reference CLI
 
