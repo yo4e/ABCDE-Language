@@ -2,10 +2,14 @@
 
 ## 利用方法
 
-ダウンロードしたcheckoutの [docs/index.html](docs/index.html) をブラウザで開きます。
-同じ `docs` フォルダのCSS・JavaScriptを一緒に置けば、Python・Node.js・ローカルサーバーは不要です。
-HTMLを直接開く `file:` と、GitHub Pagesのプロジェクト名付きパスに相当するHTTP配信の両方を
-検証しています。JavaScriptは必要です。無効時は説明を表示し、入力を送信できない状態にします。
+[公開ビューワー](https://yo4e.github.io/ABCDE-Language/)をブラウザで開いて使えます。
+ダウンロード・Python・Node.js・ローカルサーバーは不要です。
+
+オフラインで使う場合は、ダウンロードしたcheckoutの `docs/index.html` をブラウザで開きます。
+同じ `docs` フォルダのCSS・JavaScriptを一緒に置いてください。
+[GitHub上のHTML](docs/index.html)はソースコードの表示で、オンラインで起動する入口は上の公開URLです。
+HTMLを直接開く `file:` と、公開URLの `/ABCDE-Language/` 配下での動作を確認しています。
+JavaScriptは必要です。無効時は説明を表示し、入力を送信できない状態にします。
 
 入力はブラウザ内で処理し、URL・外部API・アクセスログへ送信しません。下書きと取り消し履歴は
 ページのメモリにだけ保持し、再読み込み・終了で消えます。Cookie・localStorage・Service Workerは
@@ -94,16 +98,25 @@ Playwright 1.61.1 / 独立したヘッドレスChromium 149.0.7827.55で次を�
 - 操作中の追加リクエスト0、予期しない外部リクエスト0、コンソール・ページエラー0。
 - JavaScript無効時に必要条件を説明し、送信ボタンを無効化。
 
-今回の組み立てUIについて、Safari/Firefox、実機スマートフォン、実際の日本語IME操作、
-スクリーンリーダー、実際のGitHub Pages配信は未検証です。
+PR #5の公開後は、実際の公開URLを独立したヘッドレスChrome 156.0.8078.47で検証しました。
+HTML・CSS・4つのJavaScriptの配信内容がマージ後のmainと一致し、語カード・例文追記・取り消し・
+やり直し・クリア復元・方向別下書き・曖昧入力・幅390px/320pxでの操作を確認しました。
+入力操作中の追加通信・コンソール・ページエラーは0件でした。
+
+Safari/Firefox、実機スマートフォン、実際の日本語IME操作、スクリーンリーダーは未検証です。
+補助のPlaywright WebKit検証ではスタイルに関するCSP警告が残っており、Safari本体の動作確認には
+代えていません。
 38テストに以前のPythonサーバー専用16テストは含みません。こちらにはサーバー自体がありません。
 
-## 公開構成と更新手順（今回の変更では実行しない）
+## 公開構成と更新手順
 
-既存の静的版はPR #4でマージ済みで、[公開ビューワー](https://yo4e.github.io/ABCDE-Language/) は
-`main` の `/docs` を配信します。今回の組み立てUIはローカルのレビュー用変更で、まだ公開していません。
+静的版は[PR #4](https://github.com/yo4e/ABCDE-Language/pull/4)、クリックでの組み立てUIは
+[PR #5](https://github.com/yo4e/ABCDE-Language/pull/5)でmainにマージし、公開済みです。
+PR #5のmerge commitは `20e1690fe0ac66f06d0671e08d93a3c197a8ea06` で、
+[Pagesのビルド・配信](https://github.com/yo4e/ABCDE-Language/actions/runs/40040014847)が成功しています。
+[公開ビューワー](https://yo4e.github.io/ABCDE-Language/)は `main` の `/docs` を配信します。
 
-この変更の公開を承認した段階で、最終headの上記検証とレビュー後にPRをmainへマージします。
+今後の更新では、最終headの上記検証とレビュー後にPRをmainへマージします。
 既存の **Settings → Pages → Build and deployment → Deploy from a branch** の
 `main`・`/docs` 設定を継続して使えます。エントリーは `docs/index.html`、`.nojekyll` は
 生成済みファイルをそのまま配信するためのものです。カスタムドメインやデプロイ用ワークフローは不要です。
@@ -113,4 +126,5 @@ Playwright 1.61.1 / 独立したヘッドレスChromium 149.0.7827.55で次を�
 Pagesのビルド・配信結果と設定画面に表示されるURLを確認し、その実URLで生存会話・曖昧入力・
 各アセット・狭い画面を再検証します。
 以後、公開元mainのdocs更新は自動配信されるので、生成物の更新と一致検証を更新手順に含めます。
-このローカル変更ではpush・PR作成・マージ・公開を実施せず、デプロイを起動するworkflowも追加しません。
+この構成ではmainへのマージがPagesのビルド・配信を起動します。PR用の検証CIは未設定なので、
+上記のローカル検証結果とPagesの配信結果を区別して確認してください。

@@ -2,6 +2,9 @@
 
 **Eight semantic atoms. Five letters. No inflection.**
 
+**[Open the live browser viewer](https://yo4e.github.io/ABCDE-Language/)** —
+choose Japanese/English word cards to build a sentence. No download or installation needed.
+
 ABCDE / アベケデ `[a.be.ke.de]` is an experimental minimal language for basic
 connection, survival and mutual aid. This v1 review draft separates what atoms
 say from what people conventionally mean. It includes a small offline
@@ -54,9 +57,12 @@ Unknown compounds still have atom breakdowns. The interpreter never quietly adds
 
 ## Try it in a browser
 
-Download the repository and open [docs/index.html](docs/index.html) in a browser.
-Keep the files in `docs` together. No Python, Node.js, server, package installation,
-or API key is needed to use the viewer; JavaScript must be enabled.
+Open the [published viewer](https://yo4e.github.io/ABCDE-Language/) directly.
+JavaScript must be enabled; no Python, Node.js, server setup or API key is needed.
+
+For offline use, download the repository and open the downloaded `docs/index.html`
+in a browser, keeping the files in `docs` together. The [HTML file on GitHub](docs/index.html)
+is the source listing; use the published link above to launch the viewer online.
 
 In “ことばを選ぶ” (choose words), click any of the 28 cards with Japanese and English
 labels to append an ABCDE word. “私” → “欲しい” → “水” produces `BA BACE ADACA`.
@@ -129,9 +135,10 @@ reverse phrases. Generate dictionary/examples and marked README/spec sections
 from them. Grammar prose stays in the specification and is exercised by
 [conformance fixtures](tests/conformance.json). There is no second translator
 dictionary. Static data and diagnostic text are generated from the same reference.
-The JavaScript grammar implementation is checked against full Python result JSON;
-only this development check needs Node.js (it is explicitly skipped if Node is absent).
-[REVIEW.md](REVIEW.md) records decisions, checks and open questions.
+The JavaScript grammar implementation is checked against full Python result JSON.
+JavaScript tests need Node.js only during development and are skipped if it is absent.
+[REVIEW.md](REVIEW.md) preserves the initial design review; current viewer behavior,
+verification and publication details are in [STATIC_VIEWER.md](STATIC_VIEWER.md).
 
 [Adaptations](adaptations.md) describes decorative scripts. The original
 [promo video](assets/promo_video.mp4) illustrates v0; it is historical material,
