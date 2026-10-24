@@ -3,12 +3,13 @@
 The original **ABCDE v0** is reproducible at commit
 `5f7d4b88fa339904e131519f8c305dcccf63497d`
 ([source](https://github.com/yo4e/ABCDE-Language/tree/5f7d4b88fa339904e131519f8c305dcccf63497d)).
-No duplicate old specification is kept here. No tag/release is made in this local
-pass. [Issue #1's preservation proposal](https://github.com/yo4e/ABCDE-Language/issues/1#issuecomment-5229674013)
-should be considered **before a future breaking merge**, not published now.
-This is an experimental v1 draft, not a v1 release.
+No duplicate old specification is kept here. The v1 draft was adopted in
+[PR #3](https://github.com/yo4e/ABCDE-Language/pull/3), and its browser viewer is
+[published](https://yo4e.github.io/ABCDE-Language/). This remains an experimental
+v1 draft, not a stable v1 release. [Issue #1's preservation proposal](https://github.com/yo4e/ABCDE-Language/issues/1#issuecomment-5229674013)
+is a reference for future version preservation and release decisions.
 
-原型を失敗作として捨てず、v0 として Git の履歴に残します。今回の作業はローカルのみです。
+原型を失敗作として捨てず、v0 として上記commitから再現できます。v1草案とブラウザ版はmainに反映済みです。
 
 ## Meaning changes / 語の変更
 

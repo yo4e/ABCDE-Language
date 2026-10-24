@@ -1,5 +1,10 @@
 # Local review / ローカルレビュー
 
+This is the initial design-review record. The proposal was adopted and merged in
+[PR #3](https://github.com/yo4e/ABCDE-Language/pull/3). The scope, counts and open
+questions below describe that review stage. Current browser behavior and publication
+status are documented in [STATIC_VIEWER.md](STATIC_VIEWER.md).
+
 ## Scope and status / 範囲
 
 Baseline: `5f7d4b88fa339904e131519f8c305dcccf63497d` (v0 / current remote main at checkout).
@@ -8,7 +13,7 @@ Branch: `codex/minimal-reference-20261022`.
 
 The branch contains a proposed v1 language draft, a Python standard-library CLI,
 shared JSON language/example data, generated documentation, and conformance tests.
-No push, PR, tag, release, merge, or deployment is part of this work.
+The initial local-review stage did not include push, PR, tag, release, merge or deployment.
 
 ## Design decisions / 判断
 
@@ -90,7 +95,7 @@ Execution evidence is saved outside the repository in the sibling
 `review-evidence/` directory (test log, CLI samples, JSON analyses and counts).
 These checks establish software conformance, not human learnability.
 
-## Remaining decisions / 残る判断
+## Questions recorded at review / レビュー時点の論点
 
 - この S-P-O と述語末尾の制約を採用するか。既存の自由語順や同格表現との後方互換性はない。
 - ACA の多義と、未来・過去＋日数の時間慣用が人間にも分かりやすいか。
