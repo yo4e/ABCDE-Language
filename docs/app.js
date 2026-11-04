@@ -6,6 +6,7 @@
   const form = $('translator'), source = $('source'), input = $('text'), core = $('core-only'), result = $('result');
   const editor = new ABCDEComposer.Editor(API.maxInput);
   let lastParsed = null;
+  let lastStatus = '';
   const status = { valid: '構造は有効です', ambiguous: '複数の読みがあります', invalid: '入力の形を確認してください',
     supported: '登録された表現が見つかりました', unsupported: 'この表現は未対応です' };
   const directions = { ja: '日本語 → ABCDE', en: 'English → ABCDE', abcde: 'ABCDE → 日本語・English' };
@@ -80,7 +81,11 @@
       }
       section.append(...diagnostics(sentence.diagnostics, sentence.terms));
       if (sentence.terms?.length) {
-        const terms = el('details', 'terms', el('summary', '', '語を分解して見る（直訳・慣用候補）'));
+        const action = el('span', 'disclosure-action');
+        action.setAttribute('aria-hidden', 'true');
+        const preview = sentence.terms.slice(0, 3).map(term => term.surface + '（アトム：' + (term.atoms.join(' + ') || '外部ラベル') + '）').join(' / ');
+        const terms = el('details', 'terms', el('summary', '', '語を分解して見る（直訳・慣用候補）', action,
+          el('span', 'terms-preview', preview)));
         for (const term of sentence.terms) {
           const article = el('article', '', el('h4', '', code(term.surface)),
             p(term.atoms.join(' + ') || '外部ラベル：内容は解釈しません', 'atoms'));
@@ -101,24 +106,40 @@
   const initial = Array.from(result.childNodes, node => node.cloneNode(true));
   const signature = () => JSON.stringify([editor.text, editor.direction, editor.direction === 'abcde' && editor.state.core]);
   function showResult(value, text, direction, coreOnly) {
-    result.replaceChildren(el('div', 'submission', el('span', 'eyebrow', '確認した入力 · ' + directions[direction]), code(text)),
-      el('h2', '', status[value.status]));
+    result.classList.remove('is-stale');
+    const heading = el('h2', '', status[value.status]);
+    heading.id = 'result-heading';
+    result.replaceChildren(el('div', 'submission', el('span', 'eyebrow', '確認した入力 · ' + directions[direction]), code(text)), heading);
     if (coreOnly) result.append(p('アトムと構文のみ。語・文・時間の慣用候補は表示していません。', 'notice'));
     if (value.matches) {
       result.append(el('div', 'lookup-note', bilingual(value.note)));
-      if (!value.matches.length) result.append(p('「使える日本語・英語の一覧」から選べます。近い表現への自動置き換えはしません。'));
+      if (!value.matches.length) {
+        const link = el('a', '', '使える日本語と英語を開く');
+        link.href = '#phrases';
+        link.addEventListener('click', event => {
+          event.preventDefault();
+          const details = document.querySelector('.phrasebook');
+          details.open = true;
+          details.querySelector('summary').focus();
+        });
+        result.append(p('登録表現を確認して入力するか、例文を追加してください。近い表現への自動置き換えはしません。'), link);
+      }
       for (const match of value.matches) {
         result.append(el('div', 'answer', el('span', 'eyebrow', 'ABCDE'), code(match.abcde)), ...renderAnalysis(match.analysis));
       }
     } else result.append(...renderAnalysis(value));
     $('announcement').textContent = status[value.status];
     lastParsed = signature();
+    lastStatus = status[value.status];
     result.focus();
   }
   function translate() {
     const text = editor.text, direction = editor.direction, coreOnly = direction === 'abcde' && editor.state.core;
     if (Array.from(text).length > API.maxInput || !text.trim()) {
+      result.classList.remove('is-stale');
       result.replaceChildren(el('h2', '', '入力を確認してください'), p('1〜8192文字を入力するか、語・例文を追加してください。', 'notice'));
+      result.querySelector('h2').id = 'result-heading';
+      lastStatus = '入力を確認してください';
       lastParsed = signature();
       $('announcement').textContent = '入力を確認してください';
       result.focus();
@@ -159,6 +180,7 @@
     $('mode-manual').setAttribute('aria-pressed', String(!building));
     $('direction-control').hidden = building;
     $('builder-choices').hidden = !building;
+    $('starter').hidden = !building;
     $('text-label').textContent = building ? '組み立てた文章（ABCDE）' : '入力する言葉';
     input.placeholder = building ? '下の語カードを押すと、ここに追加されます' : '水がほしい / A! CEDA';
     $('input-help').textContent = building ? '語は末尾に追加、例文は新しい行に追記します。上限8192文字です。'
@@ -171,16 +193,27 @@
     core.checked = !core.disabled && editor.state.core;
     $('undo').disabled = !editor.canUndo;
     $('redo').disabled = !editor.canRedo;
+    $('history-help').textContent = (editor.canUndo ? '直前の編集は「取り消し」で戻せます。' : 'まだ取り消せる編集はありません。')
+      + (editor.canRedo ? '取り消した編集は「やり直し」で戻せます。' : '「やり直し」は取り消し後に使えます。新しく編集すると、やり直しの履歴は消えます。');
     $('new-sentence').disabled = editor.direction !== 'abcde' || !editor.text || editor.text.endsWith('\n') || Array.from(editor.text).length >= API.maxInput;
     $('clear').disabled = !editor.text;
     previewWords();
+    syncStarter();
     const oldNotice = $('stale-note');
     if (oldNotice) oldNotice.remove();
     if (!editor.text) {
+      result.classList.remove('is-stale');
       result.replaceChildren(...initial.map(node => node.cloneNode(true)));
       lastParsed = null;
-    } else if (lastParsed !== null && lastParsed !== signature()) {
-      const notice = p('入力を変更しました。下は前回の結果です。「読みを確認」で更新できます。', 'notice');
+    }
+    const stale = lastParsed !== null && lastParsed !== signature();
+    result.classList.toggle('is-stale', stale);
+    if ($('result-heading')) $('result-heading').textContent = stale ? '前回の結果 · 現在の入力は未確認です' : lastStatus;
+    if (stale) {
+      const refresh = el('button', 'refresh-result', '今の入力で読みを確認');
+      refresh.type = 'button';
+      refresh.addEventListener('click', () => { editor.breakTyping(); translate(); });
+      const notice = el('div', 'notice stale-notice', p('入力・表示方法が変わりました。下は前回の結果です。'), refresh);
       notice.id = 'stale-note';
       result.prepend(notice);
     }
@@ -200,24 +233,55 @@
     const button = el('button', 'sample', text);
     button.type = 'button';
     button.title = abcde + ' を新しい一文として追加';
+    button.dataset.abcde = abcde;
     button.addEventListener('click', () => {
       add(abcde, true, text);
     });
     return button;
   }
+  const featured = new Set();
   for (const [direction, id] of [['ja', 'want_water'], ['ja', 'help_unspecified'], ['ja', 'do_not_eat'],
     ['en', 'i_want_water'], ['abcde', 'ambiguous_roles'], ['abcde', 'return_three_days']]) {
     const example = DATA.examples.find(example => example.id === id);
+    featured.add(example.abcde);
     $('samples').append(sampleButton(direction === 'abcde' ? example.abcde : example.reverse[direction][0], example.abcde));
   }
-  for (const direction of ['ja', 'en']) {
-    const buttons = el('div', 'samples');
-    for (const example of DATA.examples) for (const alias of example.reverse[direction]) {
-      const button = sampleButton(alias, example.abcde);
-      button.classList.add('compact');
-      buttons.append(button);
+  // One action per ABCDE sentence; preserve every accepted spelling as reference text.
+  const phrases = new Map();
+  for (const example of DATA.examples) {
+    if (!example.reverse.ja.length && !example.reverse.en.length) continue;
+    if (!phrases.has(example.abcde)) phrases.set(example.abcde, { ja: new Set(), en: new Set() });
+    for (const direction of ['ja', 'en']) for (const alias of example.reverse[direction]) phrases.get(example.abcde)[direction].add(alias);
+  }
+  for (const [abcde, aliases] of phrases) {
+    const ja = [...aliases.ja], en = [...aliases.en];
+    const row = el('div', 'phrase-row', code(abcde));
+    if (featured.has(abcde)) row.append(p('「例文を一文追加」のボタンで追加できます。', 'hint'));
+    else row.append(sampleButton([ja[0], en[0]].filter(Boolean).join(' / '), abcde));
+    row.append(p('日本語：' + (ja.join(' / ') || '登録なし')), p('English: ' + (en.join(' / ') || '登録なし'), 'english'));
+    $('phrases').append(row);
+  }
+  const starterWords = ['BA', 'BACE', 'ADACA'];
+  const starterLabels = ['1 主語：私', '2 述語：欲しい', '3 対象：水'];
+  for (const [i, word] of starterWords.entries()) {
+    const button = el('button', 'starter-step', el('span', '', starterLabels[i].split('：')[0]),
+      el('span', 'starter-word', DATA.language.conventions[word].readings[0].ja), code(word));
+    button.type = 'button';
+    button.dataset.step = i;
+    button.addEventListener('click', () => add(word, false, DATA.language.conventions[word].readings[0].ja));
+    $('starter-steps').append(button);
+  }
+  function syncStarter() {
+    // This guide recognizes only this example, never infers roles in arbitrary input.
+    const line = editor.text.split('\n').at(-1).trim().replace(/\s+/g, ' ');
+    const step = ['', 'BA', 'BA BACE', 'BA BACE ADACA'].indexOf(line);
+    for (const button of $('starter-steps').children) {
+      if (Number(button.dataset.step) === step) button.setAttribute('aria-current', 'step');
+      else button.removeAttribute('aria-current');
     }
-    $('phrases').append(el('h3', '', direction === 'ja' ? '日本語' : 'English'), buttons);
+    $('starter-hint').textContent = step >= 0 && step < 3 ? '次は「' + starterLabels[step] + '」を押してみましょう。'
+      : step === 3 ? '3語そろいました。「読みを確認」で直訳と慣用を確かめましょう。'
+        : '自由に組み立て中です。「読みを確認」で語順や省略を確認できます。この例を始めるには「次の文へ」を押します。';
   }
   let category = 'all';
   function showWords() {
@@ -229,7 +293,8 @@
       const kind = DATA.language.grammar.predicate_heads.includes(atoms[atoms.length - 1]) ? 'predicate' : 'entity';
       const ja = entry.readings.map(r => r.ja).join(' / '), en = entry.readings.map(r => r.en).join(' / ');
       if ((category !== 'all' && category !== kind) || ![word, ja, en].join(' ').toLowerCase().includes(query)) continue;
-      const button = el('button', 'word-card', el('span', 'word-ja', ja), el('span', 'english', en), code(word));
+      const button = el('button', 'word-card', el('span', 'word-ja', ja), el('span', 'english', en), code(word),
+        el('span', 'word-note', entry.note.ja));
       button.type = 'button';
       button.dataset.word = word;
       button.title = entry.note.ja + ' / ' + entry.note.en;
@@ -275,5 +340,7 @@
   $('mode-manual').disabled = false;
   showWords();
   sync();
+  $('controls').disabled = false;
+  $('controls').setAttribute('aria-busy', 'false');
   $('loading').hidden = true;
 })();

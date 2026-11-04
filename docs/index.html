@@ -8,6 +8,7 @@
   <title>ABCDE 翻訳ビューワー</title>
   <link rel="stylesheet" href="./style.css">
   <link rel="icon" href="data:,">
+  <script src="./startup.js" defer></script>
   <script src="./data.js" defer></script>
   <script src="./engine.js" defer></script>
   <script src="./composer.js" defer></script>
@@ -17,18 +18,27 @@
 <a class="skip" href="#result">結果へ移動</a>
 <div class="page">
   <header><div class="brand">ABCDE <span>LANGUAGE</span></div><span class="local">ブラウザだけで動作</span></header>
-  <div class="intro"><p class="eyebrow">8 ATOMS · 5 LETTERS</p><h1>選んで、つないで、伝える。</h1>
-    <p>ことばを足して文章に。直訳と慣用を分けて、読みを確かめられます。</p></div>
+  <div class="intro"><p class="eyebrow">ABCDE 翻訳ビューワー · 8 ATOMS · 5 LETTERS</p><h1>ことばを選んで、文を作る。</h1>
+    <p>ABCDEは、A・B・C・D・Eの5文字と、8つの基本の語（アトム）を組み合わせて作る人工言語です。<br>このページでは、ことばを選んで文を作り、日本語と英語で読みを確かめられます。</p></div>
   <noscript><p class="notice">この静的ビューワーにはJavaScriptが必要です。入力は送信されません。</p></noscript>
-  <p id="loading" class="notice">画面を準備しています。変わらない場合は、data.js・engine.js・composer.js・app.js が同じフォルダにあるか確認してください。</p>
+  <div id="loading" class="notice" role="status"><span class="spinner" aria-hidden="true"></span><strong>画面を準備しています…</strong><p>準備ができると入力できます。長く続く場合は、接続を確認してページを再読み込みしてください。</p></div>
+  <div id="load-error" class="notice" role="alert" hidden><strong>画面を読み込めませんでした。</strong><p>接続を確認して、もう一度お試しください。続く場合は時間をおいて開き直してください。</p><button id="reload" type="button">再読み込みして試す</button><p class="hint">再読み込みすると、このページの下書きは消えます。</p></div>
   <main>
     <section class="input-panel" aria-label="翻訳の入力">
       <form id="translator">
+        <fieldset id="controls" disabled aria-busy="true">
         <div class="mode-switch" role="group" aria-label="入力方法">
           <button id="mode-build" type="button" aria-pressed="true" disabled>ことばを選ぶ</button>
           <button id="mode-manual" type="button" aria-pressed="false" disabled>手入力</button>
         </div>
         <p id="draft-note" class="hint">手入力の下書きも、翻訳方向ごとに保持します。</p>
+        <p class="draft-warning">下書きはこのページを開いている間だけ保持します。<strong>再読み込み・終了で消えます。</strong>入力は外部へ送信しません。</p>
+        <section id="starter" class="starter" aria-labelledby="starter-title">
+          <h2 id="starter-title">まずは「私は水がほしい」を作る</h2>
+          <p class="hint">1 → 2 → 3 の順に押すと、入力欄の末尾に語を追加します。</p>
+          <div id="starter-steps" class="starter-steps" role="group" aria-label="例の組み立て手順"></div>
+          <p id="starter-hint" class="hint" role="status"></p>
+        </section>
         <div id="direction-control" hidden><label for="source">翻訳の方向</label>
         <select id="source"><option value="ja">日本語 → ABCDE</option><option value="en">English → ABCDE</option><option value="abcde">ABCDE → 日本語・English</option></select>
         </div>
@@ -37,9 +47,11 @@
         <p id="input-help" class="hint">語は末尾に追加、例文は新しい行に追記します。上限8192文字です。</p>
         <div id="word-preview" aria-label="選んだ語のラベル"></div>
         <div class="edit-actions" role="group" aria-label="編集操作">
-          <button id="undo" type="button" disabled>取り消し</button><button id="redo" type="button" disabled>やり直し</button>
-          <button id="new-sentence" type="button" disabled>次の文へ ↵</button><button class="clear" id="clear" type="button" disabled>クリア</button>
+          <button id="undo" type="button" aria-describedby="history-help" disabled>取り消し</button><button id="redo" type="button" aria-describedby="history-help" disabled>やり直し</button>
+          <button id="new-sentence" type="button" disabled>次の文へ ↵</button><button class="clear" id="clear" type="button" aria-describedby="clear-help" disabled>クリア</button>
         </div>
+        <p id="history-help" class="hint">まだ取り消せる編集はありません。「やり直し」は取り消し後に使えます。</p>
+        <p id="clear-help" class="hint">クリアするのは今の入力欄だけです。「取り消し」で戻せます（直近100操作まで）。</p>
         <label class="core-option"><input id="core-only" type="checkbox" disabled> アトムと構文だけを見る（ABCDE入力）</label>
         <div class="actions"><button class="primary" id="translate" type="submit" disabled>読みを確認</button></div>
         <p id="edit-message" class="edit-message" role="status"></p>
@@ -51,9 +63,10 @@
             <div class="word-filters" role="group" aria-label="語の種類"><button type="button" data-category="all" aria-pressed="true">すべて</button><button type="button" data-category="entity" aria-pressed="false">人・物</button><button type="button" data-category="predicate" aria-pressed="false">行為・評価</button></div>
             <div id="words" class="word-grid"></div><p id="no-words" class="hint" hidden>一致する語がありません。</p>
           </section>
-          <div class="try"><h2>例文を一文追加</h2><p class="hint">前の入力を残し、改行して追加します。</p><div id="samples" class="samples"></div></div>
-          <details class="phrasebook"><summary>使える日本語・英語の一覧</summary><p class="hint">どの例文もABCDEの新しい一文として追加されます。</p><div id="phrases"></div></details>
         </div>
+        <div class="try"><h2>例文を一文追加</h2><p class="hint">組み立て欄に改行して追加します。手入力の下書きは保持します。</p><div id="samples" class="samples"></div></div>
+        <details class="phrasebook"><summary>ほかの例文・使える日本語と英語 <span class="disclosure-action" aria-hidden="true"></span></summary><p class="hint">各ボタンはABCDEの新しい一文として組み立て欄に追加します。手入力の下書きは保持します。表記違いも下にまとめています。</p><div id="phrases"></div></details>
+        </fieldset>
       </form>
     </section>
     <section class="result-panel" id="result" aria-label="翻訳の結果" tabindex="-1">
