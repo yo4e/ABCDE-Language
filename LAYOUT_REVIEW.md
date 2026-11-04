@@ -1,8 +1,9 @@
 # 語選び・入力・読みの往復を整える（Issue #7 追加対応）
 
-[追加コメント](https://github.com/yo4e/ABCDE-Language/issues/7#issuecomment-6623474845)と、
-公開中のmain `e13143a` を確認したうえで実装しました。着手時に他のopen PRはありませんでした。
-この変更はレビュー用PRまでで、マージ・Pages公開は別承認です。
+この文書は[追加コメント](https://github.com/yo4e/ABCDE-Language/issues/7#issuecomment-6623474845)への
+対応方針・実測・検証の記録です。実装時のmainは `e13143a`。
+その後、[PR #9](https://github.com/yo4e/ABCDE-Language/pull/9)でマージ・公開しました。
+現在の公開状態と公開URLでの検証は [STATIC_VIEWER.md](STATIC_VIEWER.md) を参照してください。
 
 ## 配置と判断
 
@@ -79,5 +80,5 @@ git diff --check
 
 Safari/Firefox、実機タッチ、日本語IME、スクリーンリーダー、初見利用者のユーザーテストは未実施。
 モバイル確認はChromeのビューポート変更で、実機検証ではありません。
-このPRの公開先での反映は未確認です。PR用の検証CIは未設定のため、上記はローカル検証結果です。
-mainへのマージは既存のPages配信を起動します。
+上記はPR作成時のローカル検証結果です。公開後も同じ8画面サイズと主要操作を検証しました。
+PR用の検証CIは未設定のため、ローカル検証・公開URLでの確認・Pages配信成功を区別します。

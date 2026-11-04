@@ -6,9 +6,10 @@
 choose Japanese/English word cards to build a sentence. No download or installation needed.
 
 ABCDE / アベケデ `[a.be.ke.de]` is an experimental minimal language for basic
-connection, survival and mutual aid. This v1 review draft separates what atoms
-say from what people conventionally mean. It includes a small offline
-Japanese/English reference interpreter.
+connection, survival and mutual aid. Its v1 language specification remains a
+review draft, separating what atoms say from what people conventionally mean.
+The browser viewer is published and usable; a small offline Japanese/English
+reference interpreter is also included.
 
 [日本語](README_JP.md) · [Specification](specification.md) ·
 [Dictionary](dictionary.md) · [Examples](examples.md) · [Migration](migration.md)
@@ -64,11 +65,19 @@ For offline use, download the repository and open the downloaded `docs/index.htm
 in a browser, keeping the files in `docs` together. The [HTML file on GitHub](docs/index.html)
 is the source listing; use the published link above to launch the viewer online.
 
-In “ことばを選ぶ” (choose words), click any of the 28 cards with Japanese and English
-labels to append an ABCDE word. “私” → “欲しい” → “水” produces `BA BACE ADACA`.
+In “ことばを選ぶ” (choose words), start with “まずは6語” (six starting words).
+“すべて28語” shows all 28 cards; searching from the starting set also searches all
+words. Cards have Japanese/English labels and notes about their conventions.
+Click a card to append its ABCDE word. The three-step “私” → “欲しい” → “水” example
+produces `BA BACE ADACA`.
 Example and phrase buttons append a new sentence on a new line, keeping prior input.
 Use “次の文へ” for a line break, then “読みを確認” to check the reading. Word order and
 omitted roles are never silently repaired.
+
+On wide screens, word cards sit beside the input and results. Cards and results
+use page scrolling. A compact bar shows the input's ending and whether the result
+matches the current input, with links back to word search and editing. It follows
+the page except on short screens. “結果の見方” explains how to read the results.
 
 “手入力” (manual input) supports Japanese/English → ABCDE and ABCDE → Japanese/English.
 The composer and each manual direction keep separate drafts. Undo/redo covers the

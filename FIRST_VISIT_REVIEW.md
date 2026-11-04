@@ -1,8 +1,10 @@
 # 初見の分かりやすさの改善（Issue #7）
 
-[Issue #7](https://github.com/yo4e/ABCDE-Language/issues/7) の全文と、公開済みPR #4〜#6、
-現行main `71ab26e` のコード・検証手順を確認して実装しました。
-この変更はDraft PRとしてレビューするものです。マージ・Pagesへの公開は実施していません。
+この文書は[Issue #7](https://github.com/yo4e/ABCDE-Language/issues/7)に対応した、PR作成時の判断と検証の記録です。
+実装時のmainは `71ab26e`。その後、[PR #8](https://github.com/yo4e/ABCDE-Language/pull/8)で
+マージ・公開し、公開URLでの動作も確認しました。
+現在の操作・公開状態は [STATIC_VIEWER.md](STATIC_VIEWER.md)、後続の配置変更は
+[LAYOUT_REVIEW.md](LAYOUT_REVIEW.md) を参照してください。以下の配置説明はPR #8時点のものです。
 
 ## 対応と判断
 
@@ -57,9 +59,9 @@ git diff --check
 画像と結果JSONは検証コマンドの出力先に保存されます。翻訳エンジン、編集状態エンジン、
 言語仕様、辞書、例文、生成データ、CSP、保存・外部通信の方針は変更していません。
 
-## 未確認・公開への境界
+## 残る未確認範囲
 
 Safari/Firefox、実機スマートフォン、実際の日本語IME、スクリーンリーダー、初見利用者による
 ユーザーテストは未実施です。モバイル確認はChromeのビューポート変更です。
-公開URLへの反映は未実施・未確認です。PR用の検証CIはリポジトリに設定されておらず、
-ローカルの検証成功とCI成功を区別します。mainへのマージは既存のPages配信を起動します。
+公開URLでの検証はこのレビューの後に実施し、[公開後の確認](STATIC_VIEWER.md#検証方法と結果)にまとめています。
+PR用の検証CIはリポジトリに設定されておらず、ローカルの検証成功とPagesの配信成功を区別します。
