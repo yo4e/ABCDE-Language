@@ -119,10 +119,14 @@ Playwright 1.61.1 / 独立したヘッドレスChromium 149.0.7827.55で次を�
 - 操作中の追加リクエスト0、予期しない外部リクエスト0、コンソール・ページエラー0。
 - JavaScript無効時に必要条件を説明し、送信ボタンを無効化。
 
-PR #5の公開後は、実際の公開URLを独立したヘッドレスChrome 156.0.8078.47で検証しました。
-HTML・CSS・4つのJavaScriptの配信内容がマージ後のmainと一致し、語カード・例文追記・取り消し・
-やり直し・クリア復元・方向別下書き・曖昧入力・幅390px/320pxでの操作を確認しました。
-入力操作中の追加通信・コンソール・ページエラーは0件でした。
+最新の公開確認はPR #9のマージ後、2026-11-04に独立したヘッドレスChrome 156.0.8078.80で実施しました。
+公開HTML・CSS・5つのJavaScriptがマージcommit `36589868923bc3a801d53d7c0bc50eef82ba90e0` と
+バイト単位で一致し、公開エンジンでも7,717入力の全JSONがPythonと一致しました。
+初期6語／全28語・検索・例文追記・取り消し・やり直し・クリア復元・方向別下書き・古い結果を確認。
+幅320〜1440pxの8画面サイズで横はみ出しとカード枠内スクロールがなく、確認バーと
+入力・結果への移動、Tab／Shift+Tab、長い結果も検証しました。
+各JSの取得失敗と復旧、読み込み後のオフライン操作も成功。正常系の入力操作中の追加通信・
+コンソール・ページエラーは0件でした。通常のブラウザ画面・プロファイルは使用していません。
 
 Safari/Firefox、実機スマートフォン、実際の日本語IME操作、スクリーンリーダーは未検証です。
 補助のPlaywright WebKit検証ではスタイルに関するCSP警告が残っており、Safari本体の動作確認には
@@ -132,10 +136,22 @@ Safari/Firefox、実機スマートフォン、実際の日本語IME操作、ス
 ## 公開構成と更新手順
 
 静的版は[PR #4](https://github.com/yo4e/ABCDE-Language/pull/4)、クリックでの組み立てUIは
-[PR #5](https://github.com/yo4e/ABCDE-Language/pull/5)でmainにマージし、公開済みです。
-PR #5のmerge commitは `20e1690fe0ac66f06d0671e08d93a3c197a8ea06` で、
-[Pagesのビルド・配信](https://github.com/yo4e/ABCDE-Language/actions/runs/40040014847)が成功しています。
+[PR #5](https://github.com/yo4e/ABCDE-Language/pull/5)で公開しました。その後、初見の案内を
+[PR #8](https://github.com/yo4e/ABCDE-Language/pull/8)、追加レイアウトを
+[PR #9](https://github.com/yo4e/ABCDE-Language/pull/9)でマージ・公開済みです。
+最新の画面変更であるPR #9のmerge commitは `36589868923bc3a801d53d7c0bc50eef82ba90e0`。
+[Pagesのビルド・配信](https://github.com/yo4e/ABCDE-Language/actions/runs/41793918264)は成功しています。
 [公開ビューワー](https://yo4e.github.io/ABCDE-Language/)は `main` の `/docs` を配信します。
+言語仕様の `1.0.0-draft.1` はレビュー草案としての版であり、ビューアーが未公開という意味ではありません。
+
+今回の改善はここで一区切りです。再開時は最新のmainから新しい作業ブランチを作り、
+この文書の操作説明と、[初見案内](FIRST_VISIT_REVIEW.md)・[レイアウト](LAYOUT_REVIEW.md)の
+判断・残る制限を確認してください。過去の実装はマージ履歴に残り、作業ブランチの削除後も参照・復元できます。
+
+| 完了した作業 | 実装commit（ブランチ復元の起点） |
+| --- | --- |
+| PR #8：初見案内 | [`09fff6a`](https://github.com/yo4e/ABCDE-Language/commit/09fff6aaee0c1fa397246844882b4ffc2fe33f53) |
+| PR #9：レイアウト | [`da5d712`](https://github.com/yo4e/ABCDE-Language/commit/da5d71253617c9923246050679c9ac5fe5706cf9) |
 
 今後の更新では、最終headの上記検証とレビュー後にPRをmainへマージします。
 既存の **Settings → Pages → Build and deployment → Deploy from a branch** の
