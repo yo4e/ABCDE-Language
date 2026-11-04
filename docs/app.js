@@ -7,6 +7,7 @@
   const editor = new ABCDEComposer.Editor(API.maxInput);
   let lastParsed = null;
   let lastStatus = '';
+  let hasShownResult = false;
   const status = { valid: '構造は有効です', ambiguous: '複数の読みがあります', invalid: '入力の形を確認してください',
     supported: '登録された表現が見つかりました', unsupported: 'この表現は未対応です' };
   const directions = { ja: '日本語 → ABCDE', en: 'English → ABCDE', abcde: 'ABCDE → 日本語・English' };
@@ -105,6 +106,36 @@
 
   const initial = Array.from(result.childNodes, node => node.cloneNode(true));
   const signature = () => JSON.stringify([editor.text, editor.direction, editor.direction === 'abcde' && editor.state.core]);
+  function syncDock() {
+    const lines = editor.text.trimEnd().split('\n');
+    const tail = Array.from(lines[lines.length - 1]);
+    $('summary-label').textContent = '入力の末尾 · ' + directions[editor.direction];
+    $('draft-summary').textContent = editor.text ? (tail.length > 80 ? '…' : '') + tail.slice(-80).join('')
+      : 'ことばを選ぶか、入力を編集してください';
+    let labelsText = '';
+    if (editor.state.mode === 'build') {
+      try {
+        const words = API.tokenize(lines[lines.length - 1]);
+        labelsText = (words.length > 4 ? '… / ' : '') + words.slice(-4).map(word => {
+          const entry = Object.prototype.hasOwnProperty.call(DATA.language.conventions, word) ? DATA.language.conventions[word] : null;
+          return entry ? entry.readings.map(reading => reading.ja).join('・') : word;
+        }).join(' / ');
+      } catch { /* Partial manual edits can remain incomplete until confirmation. */ }
+    }
+    $('draft-words').textContent = labelsText;
+    $('draft-words').hidden = !labelsText;
+    const state = !editor.text ? 'empty' : lastParsed === null ? 'pending' : lastParsed === signature() ? 'current' : 'stale';
+    const labels = { empty: 'まだ入力はありません', pending: '読みは未確認です', current: '現在の入力の結果を表示中', stale: '入力・表示を変更 · 結果は前回のもの' };
+    $('result-state').textContent = labels[state];
+    $('composer-dock').dataset.state = state;
+  }
+  function focusResult() {
+    if (!hasShownResult) $('reading-guide').open = false;
+    hasShownResult = true;
+    syncDock();
+    result.focus();
+    result.scrollIntoView({ block: 'start' });
+  }
   function showResult(value, text, direction, coreOnly) {
     result.classList.remove('is-stale');
     const heading = el('h2', '', status[value.status]);
@@ -131,7 +162,7 @@
     $('announcement').textContent = status[value.status];
     lastParsed = signature();
     lastStatus = status[value.status];
-    result.focus();
+    focusResult();
   }
   function translate() {
     const text = editor.text, direction = editor.direction, coreOnly = direction === 'abcde' && editor.state.core;
@@ -142,7 +173,7 @@
       lastStatus = '入力を確認してください';
       lastParsed = signature();
       $('announcement').textContent = '入力を確認してください';
-      result.focus();
+      focusResult();
       return;
     }
     const value = direction === 'abcde' ? API.analyze(text, !coreOnly) : API.reverse(text, direction);
@@ -181,8 +212,10 @@
     $('direction-control').hidden = building;
     $('builder-choices').hidden = !building;
     $('starter').hidden = !building;
+    $('go-words').hidden = !building;
+    $('workspace').classList.toggle('manual-mode', !building);
     $('text-label').textContent = building ? '組み立てた文章（ABCDE）' : '入力する言葉';
-    input.placeholder = building ? '下の語カードを押すと、ここに追加されます' : '水がほしい / A! CEDA';
+    input.placeholder = building ? '語カードを押すと、ここに追加されます' : '水がほしい / A! CEDA';
     $('input-help').textContent = building ? '語は末尾に追加、例文は新しい行に追記します。上限8192文字です。'
       : '方向ごとに下書きを保持します。日本語・英語は登録表現のみ。ABCDEの文は改行で区切ります。上限8192文字です。';
     const labels = { ja: '日本語', en: 'English', abcde: 'ABCDE' };
@@ -217,6 +250,7 @@
       notice.id = 'stale-note';
       result.prepend(notice);
     }
+    syncDock();
   }
   function edit(action, message) {
     const changed = action();
@@ -283,16 +317,19 @@
       : step === 3 ? '3語そろいました。「読みを確認」で直訳と慣用を確かめましょう。'
         : '自由に組み立て中です。「読みを確認」で語順や省略を確認できます。この例を始めるには「次の文へ」を押します。';
   }
-  let category = 'all';
+  // A small, explicit starting set; every convention remains reachable via All/search.
+  const commonWords = ['BA', 'BACE', 'ADACA', 'BE', 'CEDA', 'CECA'];
+  let category = 'common';
   function showWords() {
     const query = $('word-search').value.trim().toLowerCase();
     $('words').replaceChildren();
     let count = 0;
-    for (const [word, entry] of Object.entries(DATA.language.conventions)) {
+    const entries = category === 'common' ? commonWords.map(word => [word, DATA.language.conventions[word]]) : Object.entries(DATA.language.conventions);
+    for (const [word, entry] of entries) {
       const atoms = API.atomize(word);
       const kind = DATA.language.grammar.predicate_heads.includes(atoms[atoms.length - 1]) ? 'predicate' : 'entity';
       const ja = entry.readings.map(r => r.ja).join(' / '), en = entry.readings.map(r => r.en).join(' / ');
-      if ((category !== 'all' && category !== kind) || ![word, ja, en].join(' ').toLowerCase().includes(query)) continue;
+      if ((!['all', 'common'].includes(category) && category !== kind) || ![word, ja, en].join(' ').toLowerCase().includes(query)) continue;
       const button = el('button', 'word-card', el('span', 'word-ja', ja), el('span', 'english', en), code(word),
         el('span', 'word-note', entry.note.ja));
       button.type = 'button';
@@ -303,12 +340,24 @@
       count++;
     }
     $('word-count').textContent = count + ' / ' + Object.keys(DATA.language.conventions).length + ' 語';
+    $('word-scope').textContent = category === 'common' ? 'ほかの語は「すべて28語」か検索で探せます。'
+      : '表示中の語はページをスクロールして選べます。入力は上の確認バーに残ります。';
     $('no-words').hidden = count !== 0;
+    for (const filter of document.querySelectorAll('[data-category]')) filter.setAttribute('aria-pressed', String(filter.dataset.category === category));
   }
-  $('word-search').addEventListener('input', showWords);
+  $('word-search').addEventListener('input', () => {
+    if (category === 'common' && $('word-search').value.trim()) category = 'all';
+    showWords();
+  });
+  for (const [id, target] of [['go-words', 'word-search'], ['go-input', 'text']]) {
+    $(id).addEventListener('click', event => {
+      event.preventDefault();
+      $(target).focus();
+      $(target).scrollIntoView({ block: 'start' });
+    });
+  }
   for (const button of document.querySelectorAll('[data-category]')) button.addEventListener('click', () => {
     category = button.dataset.category;
-    for (const filter of document.querySelectorAll('[data-category]')) filter.setAttribute('aria-pressed', String(filter === button));
     showWords();
   });
   input.addEventListener('input', () => { editor.setText(input.value); sync(); $('edit-message').textContent = ''; });

@@ -69,8 +69,13 @@ async function main() {
 
     // Composition is separate from manual direction-specific drafts.
     const draft = page.locator('#text');
-    const word = token => page.locator('#words [data-word="' + token + '"]').click();
+    const word = async token => {
+      if (!await page.locator('#words [data-word="' + token + '"]').count()) await page.locator('[data-category="all"]').click();
+      await page.locator('#words [data-word="' + token + '"]').click();
+    };
     const confirm = () => page.getByRole('button', { name: '読みを確認', exact: true }).click();
+    assert.equal(await page.locator('#words .word-card').count(), 6);
+    await page.locator('[data-category="all"]').click();
     assert.equal(await page.locator('#words .word-card').count(), 28);
     for (const token of ['BA', 'BACE', 'ADACA']) await word(token);
     assert.equal(await draft.inputValue(), 'BA BACE ADACA');
@@ -237,6 +242,7 @@ async function main() {
     await confirm();
     assert.equal(await result.locator('.sentence').nth(1).locator('.unspecified').count(), 2);
     await noOverflow(); await shot('narrow-composer');
+    await page.mouse.move(0, 0); // The confirmation button remains visible, so reset its hover state.
     const colors = await page.evaluate(() => ({ background: getComputedStyle(document.body).backgroundColor,
       text: getComputedStyle(document.body).color, button: getComputedStyle(document.getElementById('translate')).backgroundColor }));
     assert.deepEqual(colors, { background: 'rgb(255, 255, 255)', text: 'rgb(23, 23, 23)', button: 'rgb(255, 214, 41)' });
@@ -247,7 +253,7 @@ async function main() {
     await page.goto(fileURL);
     await page.setViewportSize({ width: 1280, height: 1000 });
     assert.match(await page.locator('.intro').innerText(), /人工言語/);
-    assert.match(await page.locator('.draft-warning').innerText(), /再読み込み・終了で消えます/);
+    assert.match(await page.locator('.draft-warning').innerText(), /再読み込み・終了で下書きは消えます/);
     assert.equal(await page.locator('#redo').isDisabled(), true);
     assert.match(await page.locator('#history-help').innerText(), /取り消し後/);
     const steps = page.locator('.starter-step');

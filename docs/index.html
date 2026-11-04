@@ -24,56 +24,59 @@
   <div id="loading" class="notice" role="status"><span class="spinner" aria-hidden="true"></span><strong>画面を準備しています…</strong><p>準備ができると入力できます。長く続く場合は、接続を確認してページを再読み込みしてください。</p></div>
   <div id="load-error" class="notice" role="alert" hidden><strong>画面を読み込めませんでした。</strong><p>接続を確認して、もう一度お試しください。続く場合は時間をおいて開き直してください。</p><button id="reload" type="button">再読み込みして試す</button><p class="hint">再読み込みすると、このページの下書きは消えます。</p></div>
   <main>
-    <section class="input-panel" aria-label="翻訳の入力">
-      <form id="translator">
-        <fieldset id="controls" disabled aria-busy="true">
-        <div class="mode-switch" role="group" aria-label="入力方法">
-          <button id="mode-build" type="button" aria-pressed="true" disabled>ことばを選ぶ</button>
-          <button id="mode-manual" type="button" aria-pressed="false" disabled>手入力</button>
+    <form id="translator">
+      <fieldset id="controls" disabled aria-busy="true">
+        <legend class="sr-only">ことばを組み立てて読みを確認</legend>
+        <div id="composer-dock" class="composer-dock" aria-label="現在の入力と確認">
+          <div class="dock-draft"><span id="summary-label" class="eyebrow">現在の入力 · ABCDE</span><code id="draft-summary">ことばを選ぶと、ここに入力が見えます</code><span id="draft-words" aria-label="末尾4語までの慣用ラベル" hidden></span><span id="result-state" class="dock-state" role="status">まだ入力はありません</span></div>
+          <div class="dock-actions"><button class="primary" id="translate" type="submit" disabled>読みを確認</button><nav class="dock-links" aria-label="作業場所へ移動"><a id="go-words" href="#word-search">語を選ぶ</a><a id="go-input" href="#text">入力を編集</a></nav></div>
         </div>
-        <p id="draft-note" class="hint">手入力の下書きも、翻訳方向ごとに保持します。</p>
-        <p class="draft-warning">下書きはこのページを開いている間だけ保持します。<strong>再読み込み・終了で消えます。</strong>入力は外部へ送信しません。</p>
-        <section id="starter" class="starter" aria-labelledby="starter-title">
-          <h2 id="starter-title">まずは「私は水がほしい」を作る</h2>
-          <p class="hint">1 → 2 → 3 の順に押すと、入力欄の末尾に語を追加します。</p>
-          <div id="starter-steps" class="starter-steps" role="group" aria-label="例の組み立て手順"></div>
-          <p id="starter-hint" class="hint" role="status"></p>
-        </section>
-        <div id="direction-control" hidden><label for="source">翻訳の方向</label>
-        <select id="source"><option value="ja">日本語 → ABCDE</option><option value="en">English → ABCDE</option><option value="abcde">ABCDE → 日本語・English</option></select>
-        </div>
-        <label for="text" id="text-label">組み立てた文章（ABCDE）</label>
-        <textarea id="text" rows="3" aria-describedby="input-help" placeholder="下の語カードを押すと、ここに追加されます"></textarea>
-        <p id="input-help" class="hint">語は末尾に追加、例文は新しい行に追記します。上限8192文字です。</p>
-        <div id="word-preview" aria-label="選んだ語のラベル"></div>
-        <div class="edit-actions" role="group" aria-label="編集操作">
-          <button id="undo" type="button" aria-describedby="history-help" disabled>取り消し</button><button id="redo" type="button" aria-describedby="history-help" disabled>やり直し</button>
-          <button id="new-sentence" type="button" disabled>次の文へ ↵</button><button class="clear" id="clear" type="button" aria-describedby="clear-help" disabled>クリア</button>
-        </div>
-        <p id="history-help" class="hint">まだ取り消せる編集はありません。「やり直し」は取り消し後に使えます。</p>
-        <p id="clear-help" class="hint">クリアするのは今の入力欄だけです。「取り消し」で戻せます（直近100操作まで）。</p>
-        <label class="core-option"><input id="core-only" type="checkbox" disabled> アトムと構文だけを見る（ABCDE入力）</label>
-        <div class="actions"><button class="primary" id="translate" type="submit" disabled>読みを確認</button></div>
-        <p id="edit-message" class="edit-message" role="status"></p>
-        <div id="builder-choices">
-          <section class="wordbook" aria-label="語を追加">
-            <div class="section-heading"><h2>ことばを追加</h2><span id="word-count" class="badge"></span></div>
-            <p class="hint">主語 → 述語 → 対象の順に選べます。省略も可能です。カードの日本語・英語は慣用のラベルで、文の訳ではありません。</p>
-            <label for="word-search" class="sr-only">ことばを探す</label><input id="word-search" type="search" placeholder="日本語・English・ABCDEで探す">
-            <div class="word-filters" role="group" aria-label="語の種類"><button type="button" data-category="all" aria-pressed="true">すべて</button><button type="button" data-category="entity" aria-pressed="false">人・物</button><button type="button" data-category="predicate" aria-pressed="false">行為・評価</button></div>
-            <div id="words" class="word-grid"></div><p id="no-words" class="hint" hidden>一致する語がありません。</p>
+        <div id="workspace" class="workspace">
+          <section id="builder-choices" class="library-panel" aria-label="ことばを選ぶ">
+            <section id="starter" class="starter" aria-labelledby="starter-title">
+              <h2 id="starter-title">まずは「私は水がほしい」を作る</h2>
+              <div id="starter-steps" class="starter-steps" role="group" aria-label="例の組み立て手順"></div>
+              <p id="starter-hint" class="hint" role="status"></p>
+            </section>
+            <section class="wordbook" aria-label="語を追加">
+              <div class="section-heading"><h2>ことばを追加</h2><span id="word-count" class="badge"></span></div>
+              <p class="hint">主語 → 述語 → 対象の順。省略も可能です。各カードは語の慣用ラベルで、文の訳ではありません。</p>
+              <label for="word-search" class="sr-only">ことばを探す</label><input id="word-search" type="search" placeholder="日本語・English・ABCDEで探す">
+              <div class="word-filters" role="group" aria-label="語の種類"><button type="button" data-category="common" aria-pressed="true">まずは6語</button><button type="button" data-category="all" aria-pressed="false">すべて28語</button><button type="button" data-category="entity" aria-pressed="false">人・物</button><button type="button" data-category="predicate" aria-pressed="false">行為・評価</button></div>
+              <p id="word-scope" class="hint">ほかの語は「すべて28語」か検索で探せます。</p>
+              <div id="words" class="word-grid"></div><p id="no-words" class="hint" hidden>一致する語がありません。</p>
+            </section>
+          </section>
+          <section id="input-panel" class="input-panel" aria-label="翻訳の入力">
+            <div class="mode-switch" role="group" aria-label="入力方法"><button id="mode-build" type="button" aria-pressed="true" disabled>ことばを選ぶ</button><button id="mode-manual" type="button" aria-pressed="false" disabled>手入力</button></div>
+            <p id="draft-note" class="hint">手入力の下書きも、翻訳方向ごとに保持します。</p>
+            <div id="direction-control" hidden><label for="source">翻訳の方向</label><select id="source"><option value="ja">日本語 → ABCDE</option><option value="en">English → ABCDE</option><option value="abcde">ABCDE → 日本語・English</option></select></div>
+            <label for="text" id="text-label">組み立てた文章（ABCDE）</label>
+            <textarea id="text" rows="3" aria-describedby="input-help draft-warning" placeholder="語カードを押すと、ここに追加されます"></textarea>
+            <p id="input-help" class="hint">語は末尾に追加、例文は新しい行に追記します。上限8192文字です。</p>
+            <div id="word-preview" aria-label="選んだ語のラベル"></div>
+            <div class="edit-actions" role="group" aria-label="編集操作"><button id="undo" type="button" aria-describedby="history-help" disabled>取り消し</button><button id="redo" type="button" aria-describedby="history-help" disabled>やり直し</button><button id="new-sentence" type="button" disabled>次の文へ ↵</button><button class="clear" id="clear" type="button" aria-describedby="clear-help" disabled>クリア</button></div>
+            <p id="history-help" class="hint">まだ取り消せる編集はありません。「やり直し」は取り消し後に使えます。</p>
+            <p id="clear-help" class="hint">クリアは今の欄だけ。「取り消し」で戻せます（直近100操作）。</p>
+            <label class="core-option"><input id="core-only" type="checkbox" disabled> アトムと構文だけを見る（ABCDE入力）</label>
+            <p id="draft-warning" class="draft-warning"><strong>再読み込み・終了で下書きは消えます。</strong>入力はブラウザ内で処理し、外部へ送信しません。</p>
+            <p id="edit-message" class="edit-message" role="status"></p>
+          </section>
+          <section class="reading-panel" aria-label="読みと説明">
+            <details id="reading-guide" class="reading-guide" open>
+              <summary>結果の見方 <span class="disclosure-action" aria-hidden="true"></span></summary>
+              <dl><div><dt>直訳</dt><dd>アトムの組み合わせを、そのまま読みます。</dd></div><div><dt>慣用と前提</dt><dd>たとえば ADACA は「水」と読む慣用です。アトムだけで意味が一つに決まるわけではありません。</dd></div><div><dt>未指定・複数の読み</dt><dd>省略した主語や対象は補わず、読みが複数あればそのまま示します。</dd></div></dl>
+              <p class="hint">「構造は有効」は、意味が一つに確定したということではありません。</p>
+            </details>
+            <section class="result-panel" id="result" aria-label="翻訳の結果" tabindex="-1"><div class="empty"><h2>読みはここに表示されます</h2><p>語や例文を選んで、上の「読みを確認」を押してください。</p></div></section>
+          </section>
+          <section class="examples-panel" aria-label="例文から試す">
+            <div class="try"><h2>例文を一文追加</h2><p class="hint">組み立て欄に改行して追加します。手入力の下書きは保持します。</p><div id="samples" class="samples"></div></div>
+            <details class="phrasebook"><summary>ほかの例文・使える日本語と英語 <span class="disclosure-action" aria-hidden="true"></span></summary><p class="hint">各ボタンはABCDEの新しい一文として組み立て欄に追加します。手入力の下書きは保持します。表記違いも下にまとめています。</p><div id="phrases"></div></details>
           </section>
         </div>
-        <div class="try"><h2>例文を一文追加</h2><p class="hint">組み立て欄に改行して追加します。手入力の下書きは保持します。</p><div id="samples" class="samples"></div></div>
-        <details class="phrasebook"><summary>ほかの例文・使える日本語と英語 <span class="disclosure-action" aria-hidden="true"></span></summary><p class="hint">各ボタンはABCDEの新しい一文として組み立て欄に追加します。手入力の下書きは保持します。表記違いも下にまとめています。</p><div id="phrases"></div></details>
-        </fieldset>
-      </form>
-    </section>
-    <section class="result-panel" id="result" aria-label="翻訳の結果" tabindex="-1">
-      <div class="empty"><span class="empty-symbol" aria-hidden="true">A · B · C · D · E</span>
-        <h2>ことばをつないでみよう。</h2><p>「私」→「欲しい」→「水」を選んで「読みを確認」。</p>
-        <p>直訳と慣用を分け、未指定の役割や複数の読みをそのまま表示します。</p></div>
-    </section>
+      </fieldset>
+    </form>
   </main>
   <p id="announcement" class="sr-only" role="status" aria-live="polite"></p>
   <footer><p>入力はこの画面を開いている間だけ保持します。外部送信・端末への保存はしません。再読み込み・終了で下書きは消えます。</p>
